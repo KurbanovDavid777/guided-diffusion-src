@@ -7,7 +7,10 @@ FROM pytorch/pytorch:2.4.1-cuda11.8-cudnn9-runtime
 RUN apt-get update && apt-get install -y \
     wget curl git \
     libxrender1 libxext6 \
-    openbabel \
+    openbabel libopenbabel-dev \
+    python3-openbabel \
+    swig \
+    g++ \
     && rm -rf /var/lib/apt/lists/*
 
 # ── Working directory ──────────────────────────────────────────────────────
@@ -16,25 +19,22 @@ WORKDIR /workspace
 # ── Python dependencies ────────────────────────────────────────────────────
 
 # small_molecules dependencies
-RUN pip install --no-cache-dir \
+RUN pip install --no-cache-dir --timeout 300 --retries 5 \
     rdkit \
     biopython \
     requests \
     pandas \
     numpy \
-    tqdm \
-    plip
+    tqdm
+
+RUN conda install -y -c conda-forge -c bioconda plip
 
 # targetdiff dependencies
+RUN pip install --no-cache-dir torch-geometric==2.6.1 scikit-learn scipy easydict pyyaml
+
 RUN pip install --no-cache-dir \
-    torch-geometric==2.6.1 \
-    torch-scatter \
-    torch-sparse \
-    torch-cluster \
-    scikit-learn \
-    scipy \
-    easydict \
-    pyyaml
+    torch-scatter torch-sparse torch-cluster \
+    -f https://data.pyg.org/whl/torch-2.4.1+cu118.html
 
 # AutoDock Vina
 RUN pip install --no-cache-dir vina
