@@ -179,16 +179,29 @@ def main():
         logger.warning('z_refs not found — running without similarity guidance')
 
     # ── Загружаем фармакофорные координаты из PLIP ───────────────────────
-    pharma_coords = None
-    raw_coords    = []
+    pharma_coords       = None
+    typed_pharma_coords = None
+    raw_coords          = []
+
     if Path(args.plip_path).exists() and args.guidance_scale > 0:
         import json
         logger.info(f'Loading pharmacophore coords from {args.plip_path}...')
-        plip_data  = json.load(open(args.plip_path))
-        raw_coords = plip_data.get('raw_coords', [])
+        plip_data    = json.load(open(args.plip_path))
+        raw_coords   = plip_data.get('raw_coords', [])
+        interactions = plip_data.get('interactions', [])
+
         if raw_coords:
             pharma_coords = torch.tensor(raw_coords, dtype=torch.float32)
             logger.info(f'Loaded {len(raw_coords)} pharmacophore points')
+
+        # Type-aware coords
+        if interactions:
+            typed_pharma_coords = {}
+            for itype in ['hbond_donor', 'hbond_acceptor', 'hydrophobic', 'salt_bridge', 'pi_cation']:
+                coords = [i['coords'] for i in interactions if i['type'] == itype]
+                if coords:
+                    typed_pharma_coords[itype] = torch.tensor(coords, dtype=torch.float32)
+                    logger.info(f'  {itype}: {len(coords)} points')
     else:
         logger.warning('PLIP coords not found — no pharmacophore guidance')
 
@@ -199,7 +212,8 @@ def main():
     model.gamma          = args.gamma
     model.encoder        = encoder
     model.z_refs         = z_refs
-    model.pharma_coords  = pharma_coords
+    model.pharma_coords       = pharma_coords
+    model.typed_pharma_coords = typed_pharma_coords
     model.affinity_model = None
 
     logger.info(f'Guidance: scale={args.guidance_scale} '
