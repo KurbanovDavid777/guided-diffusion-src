@@ -9,3 +9,4 @@ targetdiff/results/
 __pycache__/
 *.pyc
 .DS_Store
+small_molecules/encoder_dataset*/conformations_*.pt
