@@ -1,0 +1,35 @@
+pdb_id	ligand_id	mol_weight	name	smiles
+1KSW	NBS	517.3	N6-BENZYL ADENOSINE-5'-DIPHOSPHATE	N/A
+1O42	843	579.6	N-ACETYL-N-[1-(1,1'-BIPHENYL-4-YLMETHYL)-2-OXOAZEPAN-3-YL]-O-PHOSPHONOTYROSINAMIDE	N/A
+1O43	821	567.6	[4-((1Z)-2-(ACETYLAMINO)-3-{[1-(1,1'-BIPHENYL-4-YLMETHYL)-2-OXOAZEPAN-3-YL]AMINO}-3-OXOPROP-1-ENYL)-2-FORMYLPHENYL]ACET
+IC ACID	N/A
+1O44	852	629.7	2-{4-[2-ACETYLAMINO-2-(1-BIPHENYL-4-YLMETHYL-2-OXO-AZEPAN-3-YLCARBAMOYL)-ETHYL]-2-CARBOXY-PHENYL}-MALONIC ACID	N/A
+1O45	687	607.6	N-ACETYL-N-[1-(1,1'-BIPHENYL-4-YLMETHYL)-2-OXOAZEPAN-3-YL]-3-FORMYL-O-PHOSPHONOTYROSINAMIDE	N/A
+1O46	903	661.7	2-{4-[2-ACETYLAMINO-2-(1-BIPHENYL-4-YLMETHYL-2-OXO-AZEPAN-3-YLCARBAMOYL)-ETHYL]-2-METHOXYCARBONYL-PHENYL}-2-FLUORO-MALONIC ACID	N/A
+1O47	822	613.6	N-ACETYL-N-[1-(1,1'-BIPHENYL-4-YLMETHYL)-2-OXOAZEPAN-3-YL]-4-[DIFLUORO(PHOSPHONO)METHYL]PHENYLALANINAMIDE	N/A
+1O48	853	585.6	5-[2-ACETYLAMINO-2-(1-BIPHENYL-4-YLMETHYL-2-OXO-AZEPAN-3-YLCARBAMOYL)-ETHYL]-2-CARBOXYMETHYL-BENZOIC ACID	N/A
+1O49	493	637.6	{4-[2-ACETYLAMINO-2-(1-BIPHENYL-4-YLMETHYL-2-OXO-AZEPAN-3-YLCARBAMOYL)-ETHYL]-2-PHOSPHONO-PHENOXY}-ACETIC ACID	N/A
+1O4A	197	555.6	4-[2-ACETYLAMINO-2-(1-BIPHENYL-4-YLMETHYL-2-OXO-AZEPAN-3-YLCARBAMOYL)-ETHYL]-2-FORMYL-BENZOIC ACID	N/A
+1O4B	876	643.6	N-ACETYL-N-[1-(1,1'-BIPHENYL-4-YLMETHYL)-2-OXOAZEPAN-3-YL]-3,4-DIPHOSPHONOPHENYLALANINAMIDE	N/A
+1Y57	MPZ	479.6	4-[(4-METHYLPIPERAZIN-1-YL)METHYL]-N-{3-[(4-PYRIDIN-3-YLPYRIMIDIN-2-YL)AMINO]PHENYL}BENZAMIDE	N/A
+1YOL	S03	429.5	1-{4-[4-AMINO-5-(3-METHOXYPHENYL)-7H-PYRROLO[2,3-D]PYRIMIDIN-7-YL]BENZYL}PIPERIDIN-4-OL	N/A
+1YOM	P01	388.9	2-({6-[(3-CHLOROPHENYL)AMINO]-9-ISOPROPYL-9H-PURIN-2-YL}AMINO)-3-METHYLBUTAN-1-OL	N/A
+2BDF	24A	494.4	{[(4-{[2-(4-AMINOCYCLOHEXYL)-9-ETHYL-9H-PURIN-6-YL]AMINO}PHENYL)(HYDROXY)PHOSPHORYL]METHYL}PHOSPHONIC ACID	N/A
+2BDJ	HET	475.5	3-[2-(2-CYCLOPENTYL-6-{[4-(DIMETHYLPHOSPHORYL)PHENYL]AMINO}-9H-PURIN-9-YL)ETHYL]PHENOL	N/A
+2H8H	H8H	542.0	N-(5-CHLORO-1,3-BENZODIOXOL-4-YL)-7-[2-(4-METHYLPIPERAZIN-1-YL)ETHOXY]-5-(TETRAHYDRO-2H-PYRAN-4-YLOXY)QUINAZOLIN-4-AMINE	N/A
+2SRC	ANP	506.2	PHOSPHOAMINOPHOSPHONIC ACID-ADENYLATE ESTER	N/A
+4K11	0J9	317.4	1-tert-butyl-3-(naphthalen-1-yl)-1H-pyrazolo[3,4-d]pyrimidin-4-amine	N/A
+4MXO	DB8	530.4	4-[(2,4-dichloro-5-methoxyphenyl)amino]-6-methoxy-7-[3-(4-methylpiperazin-1-yl)propoxy]quinoline-3-carbonitrile	N/A
+4MXX	DB8	530.4	4-[(2,4-dichloro-5-methoxyphenyl)amino]-6-methoxy-7-[3-(4-methylpiperazin-1-yl)propoxy]quinoline-3-carbonitrile	N/A
+4MXY	DB8	530.4	4-[(2,4-dichloro-5-methoxyphenyl)amino]-6-methoxy-7-[3-(4-methylpiperazin-1-yl)propoxy]quinoline-3-carbonitrile	N/A
+4MXZ	DB8	530.4	4-[(2,4-dichloro-5-methoxyphenyl)amino]-6-methoxy-7-[3-(4-methylpiperazin-1-yl)propoxy]quinoline-3-carbonitrile	N/A
+6ATE	6H3	466.0	N-{2-[(5-chloro-2-{[4-(4-methylpiperazin-1-yl)phenyl]amino}pyrimidin-4-yl)amino]phenyl}propanamide	N/A
+6E6E	HVY	599.1	N-(2-chloro-6-methylphenyl)-2-{[4-(4-methylpiperazin-1-yl)phenyl]amino}-4-{[2-(propanoylamino)phenyl]amino}pyrimidine-5-carboxamide	N/A
+7NG7	UCW	510.6	tert-butyl (4-(4-amino-1-(2-(4-(dimethylamino)piperidin-1-yl)ethyl)-1H-pyrazolo[3,4-d]pyrimidin-3-yl)-2-methoxyphenyl)carbamate	N/A
+7OTE	0LI	532.6	3-(imidazo[1,2-b]pyridazin-3-ylethynyl)-4-methyl-N-{4-[(4-methylpiperazin-1-yl)methyl]-3-(trifluoromethyl)phenyl}benzam
+ide	N/A
+8HAQ	L1N	449.5	4-[(~{E})-(7-oxidanyl-6~{H}-pyrrolo[2,3-g][1,3]benzothiazol-8-yl)methylideneamino]-~{N}-pyridin-2-yl-benzenesulfonamide	N/A
+8JF3	C0N	549.6	2-[4-[4-[bis(oxidanylidene)-$l^5-sulfanyl]oxyphenyl]carbonylpiperazin-1-yl]-6-[(5-cyclopropyl-1H-pyrazol-3-yl)amino]-N-prop-2-ynyl-pyrimidine-4-carboxamide	N/A
+8JN8	JA6	318.4	(2R)-N-cyclopentyl-2-[cyclopropyl(ethanoyl)amino]-2-(4-fluorophenyl)ethanamide	N/A
+8JN9	UJ0	348.4	N-[(1R)-1-[3,5-bis(fluoranyl)phenyl]-2-(cyclopentylamino)-2-oxidanylidene-ethyl]-N-cyclopropyl-prop-2-enamide	N/A
+9IRL	A1L20	370.8	(2~{R})-2-[3,5-bis(fluoranyl)phenyl]-2-[2-chloranylethanoyl(cyclopropyl)amino]-~{N}-cyclopentyl-ethanamide	N/A

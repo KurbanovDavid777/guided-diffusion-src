@@ -1,0 +1,176 @@
+{
+  "pdb_id": "8JN8",
+  "ligand_id": "JA6",
+  "binding_site_id": "JA6:A:601",
+  "pocket_center": [
+    -18.077,
+    74.451,
+    105.986
+  ],
+  "n_hbonds": 2,
+  "n_hydrophobic": 7,
+  "n_pi_stacking": 0,
+  "n_salt_bridges": 0,
+  "n_pi_cation": 0,
+  "n_interactions": 9,
+  "interactions": {
+    "hbonds": [
+      {
+        "type": "hbond",
+        "dist": 1.97,
+        "donor_atom": 1555,
+        "accept_atom": 3644,
+        "d_coords": [
+          -18.834,
+          73.486,
+          101.346
+        ],
+        "a_coords": [
+          -18.825,
+          76.031,
+          102.839
+        ],
+        "h_coords": [
+          -18.832239253879212,
+          74.37808589662554,
+          101.76243715349968
+        ],
+        "protein_res": "CYS280",
+        "protisdon": true
+      },
+      {
+        "type": "hbond",
+        "dist": 2.17,
+        "donor_atom": 1561,
+        "accept_atom": 3645,
+        "d_coords": [
+          -17.314,
+          71.492,
+          102.613
+        ],
+        "a_coords": [
+          -17.655,
+          73.819,
+          104.508
+        ],
+        "h_coords": [
+          -17.82588044548711,
+          72.15536879985106,
+          103.12987570547675
+        ],
+        "protein_res": "PHE281",
+        "protisdon": true
+      }
+    ],
+    "hydrophobic": [
+      {
+        "type": "hydrophobic",
+        "dist": 3.53,
+        "lig_coords": [
+          -21.593,
+          72.264,
+          107.269
+        ],
+        "prot_coords": [
+          -22.99,
+          71.201,
+          110.327
+        ],
+        "protein_res": "LYS298"
+      },
+      {
+        "type": "hydrophobic",
+        "dist": 3.94,
+        "lig_coords": [
+          -20.294,
+          71.835,
+          107.417
+        ],
+        "prot_coords": [
+          -17.841,
+          69.053,
+          108.751
+        ],
+        "protein_res": "LEU300"
+      },
+      {
+        "type": "hydrophobic",
+        "dist": 3.94,
+        "lig_coords": [
+          -17.873,
+          77.683,
+          109.062
+        ],
+        "prot_coords": [
+          -19.571,
+          77.139,
+          112.579
+        ],
+        "protein_res": "ASP407"
+      },
+      {
+        "type": "hydrophobic",
+        "dist": 3.91,
+        "lig_coords": [
+          -16.125,
+          75.682,
+          108.897
+        ],
+        "prot_coords": [
+          -12.586,
+          75.372,
+          107.268
+        ],
+        "protein_res": "ILE414"
+      },
+      {
+        "type": "hydrophobic",
+        "dist": 3.97,
+        "lig_coords": [
+          -16.855,
+          76.751,
+          101.716
+        ],
+        "prot_coords": [
+          -13.323,
+          77.116,
+          99.943
+        ],
+        "protein_res": "LYS426"
+      },
+      {
+        "type": "hydrophobic",
+        "dist": 3.43,
+        "lig_coords": [
+          -21.593,
+          72.264,
+          107.269
+        ],
+        "prot_coords": [
+          -25.019,
+          72.372,
+          107.233
+        ],
+        "protein_res": "VAL284"
+      },
+      {
+        "type": "hydrophobic",
+        "dist": 3.52,
+        "lig_coords": [
+          -15.257,
+          78.081,
+          104.003
+        ],
+        "prot_coords": [
+          -11.831,
+          78.486,
+          104.712
+        ],
+        "protein_res": "TYR419"
+      }
+    ],
+    "pi_stacking": [],
+    "salt_bridges": [],
+    "pi_cation": []
+  }
+}

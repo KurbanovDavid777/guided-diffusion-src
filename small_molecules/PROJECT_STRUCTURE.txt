@@ -1,0 +1,157 @@
+═══════════════════════════════════════════════════════════════
+  SMALL MOLECULES — СТРУКТУРА ПРОЕКТА
+  Автономная система генерации молекул для киназы Src (P12931)
+═══════════════════════════════════════════════════════════════
+
+ЦЕЛЬ ПРОЕКТА
+─────────────
+Сгенерировать активные молекулы против киназы Src (UniProt P12931),
+которые отличаются от уже известных ингибиторов (next-in-class).
+
+Пайплайн: PDB структуры + PLIP → карманы → TargetDiff генерация
+         → GNINA скоринг + Tanimoto → активные и новые молекулы
+
+
+СКРИПТЫ
+────────
+
+1. fetch_structures.py
+   Назначение: скачивает PDB структуры мишени из RCSB
+   Вход:       UniProt ID (например P12931)
+   Выход:      structures/P12931/*.pdb  — 31 структура
+               data/P12931_inhibitors.txt  — список PDB ID + лигандов
+   Запуск:     python fetch_structures.py --uniprot P12931
+
+2. data_prep.py
+   Назначение: получает референсные SMILES активных молекул из ChEMBL
+               используются для Tanimoto сравнения с новыми молекулами
+   Вход:       UniProt ID или PDB ID
+   Выход:      reference_mol/P12931_references.csv
+               reference_mol/P12931_references.smi
+   Запуск:     python data_prep.py --uniprot P12931
+   Примечание: молекулы отсортированы по активности (IC50 ≤ 1 мкМ)
+               и отфильтрованы по разнообразию (Tanimoto < 0.4)
+
+3. plip_analysis.py
+   Назначение: анализирует взаимодействия белок-лиганд через PLIP
+               вытаскивает координаты карманов из каждой структуры
+   Вход:       structures/P12931/*.pdb
+   Выход:      plip_results/P12931_plip_summary.csv  — сводная таблица
+               plip_results/*/interactions.json  — детальные координаты
+   Запуск:     python plip_analysis.py --uniprot P12931
+   Примечание: анализирует hbonds, hydrophobic, pi-stacking,
+               salt bridges, pi-cation взаимодействия
+
+4. select_target.py
+   Назначение: выбирает лучшую структуру для генерации молекул
+               критерии: максимум взаимодействий + лучшее разрешение
+   Вход:       plip_results/P12931_plip_summary.csv
+   Выход:      target/1O49_target.pdb  — мишень для TargetDiff
+   Запуск:     python select_target.py --uniprot P12931
+   Результат:  1O49 (20 взаимодействий, разрешение 1.7Å)
+
+5. extract_coordinates.py
+   Назначение: вытаскивает координаты карманов из PLIP отчётов
+               готовит данные в формате для TargetDiff
+   Вход:       plip_results/*/interactions.json
+   Выход:      coordinates/P12931_pocket_centers.csv  — центры карманов
+               coordinates/P12931_pocket_coords.csv   — все точки
+               coordinates/*_coords.json  — детальный JSON для TargetDiff
+   Запуск:     python extract_coordinates.py --uniprot P12931 --top 10
+
+
+СТРУКТУРА ПАПОК
+────────────────
+
+small_molecules/
+│
+├── fetch_structures.py       ← скрипт 1
+├── data_prep.py              ← скрипт 2
+├── plip_analysis.py          ← скрипт 3
+├── select_target.py          ← скрипт 4
+├── extract_coordinates.py    ← скрипт 5
+│
+├── structures/
+│   └── P12931/               ← 31 PDB файл (белок + лиганд)
+│       ├── 1O49.pdb
+│       ├── 1O46.pdb
+│       └── ...
+│
+├── data/
+│   └── P12931_inhibitors.txt ← список PDB ID + лигандов + SMILES
+│
+├── reference_mol/            ← референсные SMILES для Tanimoto
+│   ├── P12931_references.csv
+│   └── P12931_references.smi
+│
+├── plip_results/             ← PLIP отчёты (48 binding sites)
+│   ├── P12931_plip_summary.csv
+│   ├── 1O49_493/
+│   │   └── interactions.json
+│   └── ...
+│
+├── target/                   ← мишень для генерации
+│   └── 1O49_target.pdb       ← лучшая структура (выбрана автоматически)
+│
+└── coordinates/              ← координаты для TargetDiff
+    ├── P12931_pocket_centers.csv
+    ├── P12931_pocket_coords.csv
+    └── 1O49_493_coords.json  ← центр кармана + все точки взаимодействий
+
+
+ПОРЯДОК ЗАПУСКА
+────────────────
+
+# Шаг 1: скачать структуры
+python fetch_structures.py --uniprot P12931
+
+# Шаг 2: получить референсные SMILES
+python data_prep.py --uniprot P12931
+
+# Шаг 3: проанализировать карманы
+python plip_analysis.py --uniprot P12931
+
+# Шаг 4: выбрать лучшую мишень
+python select_target.py --uniprot P12931
+
+# Шаг 5: вытащить координаты
+python extract_coordinates.py --uniprot P12931 --top 10
+
+
+ЧТО ПЕРЕДАЁТСЯ КОМАНДЕ ГЕНЕРАЦИИ
+──────────────────────────────────
+
+target/1O49_target.pdb              — структура белка-мишени
+coordinates/1O49_493_coords.json    — координаты кармана
+coordinates/P12931_pocket_centers.csv — центры всех карманов
+reference_mol/P12931_references.smi — референсные SMILES
+
+
+МИШЕНЬ
+───────
+
+Белок:     Src киназа
+UniProt:   P12931
+Структура: 1O49 (лиганд 493)
+Разрешение: 1.7Å
+Карман:    20 взаимодействий (9 hbonds + 8 hydrophobic)
+Центр:     (17.755, 22.501, 20.273)
+
+Зачем Src киназа:
+  - Онкоген, гиперактивен при раке груди, лёгкого, колоректальном
+  - Много структур в PDB (31 найдено)
+  - Известные ингибиторы: Dasatinib, Bosutinib
+  - Задача: сгенерировать next-in-class молекулы
+    (активные НО непохожие на существующие ингибиторы)
+
+
+
+
+
+ОКРУЖЕНИЕ
+──────────
+
+conda activate small_molecules
+Python 3.11, PLIP 2.3.1, RDKit, PyTorch 2.10.0
+
+═══════════════════════════════════════════════════════════════

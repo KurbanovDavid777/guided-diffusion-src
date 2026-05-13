@@ -1,0 +1,108 @@
+{
+  "pdb_id": "2H8H",
+  "ligand_id": "H8H",
+  "binding_site_id": "H8H:A:534",
+  "pocket_center": [
+    18.49,
+    22.578,
+    57.26
+  ],
+  "n_hbonds": 1,
+  "n_hydrophobic": 4,
+  "n_pi_stacking": 0,
+  "n_salt_bridges": 0,
+  "n_pi_cation": 0,
+  "n_interactions": 5,
+  "interactions": {
+    "hbonds": [
+      {
+        "type": "hbond",
+        "dist": 2.02,
+        "donor_atom": 2070,
+        "accept_atom": 3638,
+        "d_coords": [
+          23.52,
+          26.12,
+          58.679
+        ],
+        "a_coords": [
+          21.381,
+          24.21,
+          57.821
+        ],
+        "h_coords": [
+          22.909991954199008,
+          25.432336394180414,
+          58.32651000115002
+        ],
+        "protein_res": "MET341",
+        "protisdon": true
+      }
+    ],
+    "hydrophobic": [
+      {
+        "type": "hydrophobic",
+        "dist": 3.89,
+        "lig_coords": [
+          18.704,
+          17.837,
+          58.173
+        ],
+        "prot_coords": [
+          21.362,
+          18.036,
+          55.342
+        ],
+        "protein_res": "LEU273"
+      },
+      {
+        "type": "hydrophobic",
+        "dist": 3.64,
+        "lig_coords": [
+          14.176,
+          24.308,
+          56.499
+        ],
+        "prot_coords": [
+          12.508,
+          22.08,
+          54.146
+        ],
+        "protein_res": "LYS295"
+      },
+      {
+        "type": "hydrophobic",
+        "dist": 3.9,
+        "lig_coords": [
+          22.564,
+          22.241,
+          58.441
+        ],
+        "prot_coords": [
+          25.309,
+          23.009,
+          55.776
+        ],
+        "protein_res": "TYR340"
+      },
+      {
+        "type": "hydrophobic",
+        "dist": 3.9,
+        "lig_coords": [
+          14.207,
+          23.604,
+          57.694
+        ],
+        "prot_coords": [
+          11.17,
+          24.34,
+          60.026
+        ],
+        "protein_res": "ASP404"
+      }
+    ],
+    "pi_stacking": [],
+    "salt_bridges": [],
+    "pi_cation": []
+  }
+}

@@ -1,0 +1,99 @@
+{\rtf1\ansi\ansicpg1251\cocoartf2868
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset128 HiraginoSans-W3;\f2\fnil\fcharset0 LucidaGrande;
+}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 python fetch_structures.py --uniprot P12931   # Src \uc0\u1082 \u1080 \u1085 \u1072 \u1079 \u1072 \
+python fetch_structures.py --uniprot P00533   # EGFR\
+python fetch_structures.py --uniprot O14965   # Aurora A\
+\
+python data_prep.py --uniprot P12931   # UniProt \uc0\u1088 \u1077 \u1078 \u1080 \u1084  (\u1085 \u1086 \u1074 \u1099 \u1081 )\
+python data_prep.py --pdb 6LU7         # PDB \uc0\u1088 \u1077 \u1078 \u1080 \u1084  (\u1089 \u1090 \u1072 \u1088 \u1099 \u1081 , \u1090 \u1086 \u1078 \u1077  \u1088 \u1072 \u1073 \u1086 \u1090 \u1072 \u1077 \u1090 )\
+\
+python plip_analysis.py --uniprot P12931\
+\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 # \uc0\u1042 \u1089 \u1077  48 \u1082 \u1072 \u1088 \u1084 \u1072 \u1085 \u1086 \u1074 \
+python extract_coordinates.py --uniprot P12931\
+\
+# \uc0\u1058 \u1086 \u1083 \u1100 \u1082 \u1086  \u1090 \u1086 \u1087 -10\
+python extract_coordinates.py --uniprot P12931 --top 10\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
+small_molecules/\
+
+\f1 \'84\'a5
+\f0 \uc0\u9472 \u9472  fetch_structures.py\
+
+\f1 \'84\'a5
+\f0 \uc0\u9472 \u9472  data_prep.py\
+
+\f1 \'84\'a5
+\f0 \uc0\u9472 \u9472  data/\
+\uc0\u9474    \u9492 \u9472 \u9472  P12931_inhibitors.txt     
+\f2 \uc0\u8592 
+\f0  \uc0\u1089 \u1087 \u1080 \u1089 \u1086 \u1082  PDB ID + \u1083 \u1080 \u1075 \u1072 \u1085 \u1076 \u1086 \u1074 \
+
+\f1 \'84\'a5
+\f0 \uc0\u9472 \u9472  structures/\
+\uc0\u9474    \u9492 \u9472 \u9472  P12931/                   
+\f2 \uc0\u8592 
+\f0  PDB \uc0\u1092 \u1072 \u1081 \u1083 \u1099  
+\f2 \uc0\u8594 
+\f0  \uc0\u1076 \u1083 \u1103  PLIP\
+\uc0\u9474        
+\f1 \'84\'a5
+\f0 \uc0\u9472 \u9472  2SRC.pdb\
+\uc0\u9474        \u9492 \u9472 \u9472  ...\
+\uc0\u9492 \u9472 \u9472  reference_mol/\
+    
+\f1 \'84\'a5
+\f0 \uc0\u9472 \u9472  P12931_references.csv     
+\f2 \uc0\u8592 
+\f0  \uc0\u1076 \u1083 \u1103  \u1072 \u1085 \u1072 \u1083 \u1080 \u1079 \u1072 \
+    \uc0\u9492 \u9472 \u9472  P12931_references.smi     
+\f2 \uc0\u8592 
+\f0  \uc0\u1076 \u1083 \u1103  Tanimoto \u1089 \u1088 \u1072 \u1074 \u1085 \u1077 \u1085 \u1080 \u1103 \
+\
+plip_results/\
+
+\f1 \'84\'a5
+\f0 \uc0\u9472 \u9472  P12931_plip_summary.csv     
+\f2 \uc0\u8592 
+\f0  \uc0\u1089 \u1074 \u1086 \u1076 \u1085 \u1072 \u1103  \u1090 \u1072 \u1073 \u1083 \u1080 \u1094 \u1072 \
+\uc0\u9492 \u9472 \u9472  2SRC_HET/\
+    \uc0\u9492 \u9472 \u9472  interactions.json       
+\f2 \uc0\u8592 
+\f0  \uc0\u1082 \u1086 \u1086 \u1088 \u1076 \u1080 \u1085 \u1072 \u1090 \u1099  \u1076 \u1083 \u1103  TargetDiff\
+\
+\
+small_molecules/\
+
+\f1 \'84\'a5
+\f0 \uc0\u9472 \u9472  structures/P12931/    
+\f2 \uc0\u10003 
+\f0   31 PDB \uc0\u1089 \u1090 \u1088 \u1091 \u1082 \u1090 \u1091 \u1088 \u1072 \
+
+\f1 \'84\'a5
+\f0 \uc0\u9472 \u9472  reference_mol/        
+\f2 \uc0\u10003 
+\f0   \uc0\u1088 \u1077 \u1092 \u1077 \u1088 \u1077 \u1085 \u1089 \u1085 \u1099 \u1077  SMILES (Tanimoto)\
+
+\f1 \'84\'a5
+\f0 \uc0\u9472 \u9472  plip_results/         
+\f2 \uc0\u10003 
+\f0   48 \uc0\u1082 \u1072 \u1088 \u1084 \u1072 \u1085 \u1086 \u1074  \u1089  \u1082 \u1086 \u1086 \u1088 \u1076 \u1080 \u1085 \u1072 \u1090 \u1072 \u1084 \u1080 \
+\uc0\u9492 \u9472 \u9472  target/\
+    \uc0\u9492 \u9472 \u9472  1O49_target.pdb   
+\f2 \uc0\u10003 
+\f0   \uc0\u1084 \u1080 \u1096 \u1077 \u1085 \u1100  \u1076 \u1083 \u1103  \u1075 \u1077 \u1085 \u1077 \u1088 \u1072 \u1094 \u1080 \u1080 \
+\
+\
+\
+\
+}

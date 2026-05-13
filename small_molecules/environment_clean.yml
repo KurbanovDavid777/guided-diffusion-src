@@ -1,0 +1,20 @@
+name: small_molecules
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - plip
+  - pandas
+  - requests
+  - rdkit
+  - scikit-learn
+  - catboost
+  - xgboost
+  - ipykernel
+  - pytorch
+  - torchaudio
+  - torchvision
+  - optuna
+  - shap
+  - path

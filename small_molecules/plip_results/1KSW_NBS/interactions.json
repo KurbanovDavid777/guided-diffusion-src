@@ -1,0 +1,201 @@
+{
+  "pdb_id": "1KSW",
+  "ligand_id": "NBS",
+  "binding_site_id": "NBS:A:1",
+  "pocket_center": [
+    0.232,
+    50.632,
+    3.05
+  ],
+  "n_hbonds": 5,
+  "n_hydrophobic": 2,
+  "n_pi_stacking": 0,
+  "n_salt_bridges": 2,
+  "n_pi_cation": 0,
+  "n_interactions": 9,
+  "interactions": {
+    "hbonds": [
+      {
+        "type": "hbond",
+        "dist": 1.93,
+        "donor_atom": 3632,
+        "accept_atom": 2042,
+        "d_coords": [
+          2.3,
+          50.986,
+          6.161
+        ],
+        "a_coords": [
+          3.097,
+          51.402,
+          8.681
+        ],
+        "h_coords": [
+          2.9837563984517232,
+          51.36625978774021,
+          6.758595123310166
+        ],
+        "protein_res": "GLU339",
+        "protisdon": false
+      },
+      {
+        "type": "hbond",
+        "dist": 3.17,
+        "donor_atom": 1548,
+        "accept_atom": 3614,
+        "d_coords": [
+          -7.559,
+          51.084,
+          -4.827
+        ],
+        "a_coords": [
+          -5.024,
+          48.685,
+          -3.293
+        ],
+        "h_coords": [
+          -7.579255541646358,
+          50.31872314551065,
+          -4.207983603597204
+        ],
+        "protein_res": "CYS277",
+        "protisdon": true
+      },
+      {
+        "type": "hbond",
+        "dist": 3.46,
+        "donor_atom": 1544,
+        "accept_atom": 3618,
+        "d_coords": [
+          -4.094,
+          52.144,
+          -4.432
+        ],
+        "a_coords": [
+          -2.687,
+          51.406,
+          -0.661
+        ],
+        "h_coords": [
+          -3.7355725736640624,
+          52.69497548770609,
+          -3.6990634120217294
+        ],
+        "protein_res": "GLY276",
+        "protisdon": true
+      },
+      {
+        "type": "hbond",
+        "dist": 2.11,
+        "donor_atom": 2060,
+        "accept_atom": 3630,
+        "d_coords": [
+          5.551,
+          50.124,
+          7.007
+        ],
+        "a_coords": [
+          3.983,
+          50.648,
+          4.538
+        ],
+        "h_coords": [
+          4.760945901038409,
+          50.39152024905172,
+          6.484039497608764
+        ],
+        "protein_res": "MET341",
+        "protisdon": true
+      },
+      {
+        "type": "hbond",
+        "dist": 3.08,
+        "donor_atom": 2087,
+        "accept_atom": 3644,
+        "d_coords": [
+          3.399,
+          44.955,
+          0.686
+        ],
+        "a_coords": [
+          2.85,
+          48.522,
+          -0.85
+        ],
+        "h_coords": [
+          3.43972664011343,
+          45.60206300055262,
+          -0.054871827039545296
+        ],
+        "protein_res": "SER345",
+        "protisdon": true
+      }
+    ],
+    "hydrophobic": [
+      {
+        "type": "hydrophobic",
+        "dist": 3.44,
+        "lig_coords": [
+          -0.834,
+          52.16,
+          7.806
+        ],
+        "prot_coords": [
+          -0.673,
+          49.374,
+          9.81
+        ],
+        "protein_res": "VAL323"
+      },
+      {
+        "type": "hydrophobic",
+        "dist": 3.07,
+        "lig_coords": [
+          0.139,
+          52.966,
+          5.774
+        ],
+        "prot_coords": [
+          2.806,
+          54.392,
+          6.307
+        ],
+        "protein_res": "ALA293"
+      }
+    ],
+    "pi_stacking": [],
+    "salt_bridges": [
+      {
+        "type": "salt_bridge",
+        "dist": 3.76,
+        "lig_coords": [
+          -3.543,
+          50.26,
+          -0.276
+        ],
+        "prot_coords": [
+          -5.946,
+          51.761,
+          2.198
+        ],
+        "protein_res": "LYS295"
+      },
+      {
+        "type": "salt_bridge",
+        "dist": 5.37,
+        "lig_coords": [
+          -4.707,
+          48.145,
+          -1.934
+        ],
+        "prot_coords": [
+          -8.365333333333334,
+          44.24966666666666,
+          -1.4266666666666667
+        ],
+        "protein_res": "ARG388"
+      }
+    ],
+    "pi_cation": []
+  }
+}

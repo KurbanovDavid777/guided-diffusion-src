@@ -1,0 +1,21 @@
+
+Encoder Dataset v2 Summary (Fixed)
+====================================
+Target: P12931 → CHEMBL267
+
+KEY FIXES vs v1:
+  ✓ Negatives from ChEMBL (pChEMBL < 4) — same distribution!
+  ✓ 21 references EXCLUDED from training
+  ✓ Middle band (0.3-0.6) added as hard negatives
+
+Molecules:
+  Active (pChEMBL ≥ 5, excl. refs): 1334
+  Negative (pChEMBL < 4, ChEMBL):   414
+  References (holdout, not trained): 21
+
+Pairs:
+  Similar (label=1, Tanimoto > 0.6):        8000
+  Middle+Dissimilar (label=0, Tan < 0.6):   20000
+    Middle band (0.3-0.6, hard negatives):  4000
+    Dissimilar (< 0.3):                     16000
+  Total:                                     28000

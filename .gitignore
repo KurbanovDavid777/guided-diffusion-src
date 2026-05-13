@@ -1,0 +1,11 @@
+targetdiff/outputs/
+targetdiff/pretrained_models/
+targetdiff/data/
+small_molecules/encoder_dataset/
+small_molecules/encoder_dataset_v2/conformations_*.pt
+small_molecules/structures/
+targetdiff/docking/
+targetdiff/results/
+__pycache__/
+*.pyc
+.DS_Store

@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  guided-diffusion:
+    build: .
+    image: guided-diffusion-src-kinase
+    container_name: guided_diffusion
+    volumes:
+      # Монтируем outputs наружу чтобы сохранить результаты
+      - ./outputs:/workspace/targetdiff/outputs
+      - ./docking:/workspace/targetdiff/docking
+      - ./results:/workspace/targetdiff/results
+    # Используем GPU если есть
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+      - PYTHONPATH=/workspace/targetdiff
+    working_dir: /workspace/targetdiff
+    stdin_open: true
+    tty: true
