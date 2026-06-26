@@ -10,3 +10,36 @@ __pycache__/
 *.pyc
 .DS_Store
 small_molecules/encoder_dataset*/conformations_*.pt
+# Large files — не в Git
+targetdiff/outputs/
+targetdiff/pretrained_models/
+targetdiff/data/
+small_molecules/encoder_dataset/
+small_molecules/encoder_dataset_v2/conformations_*.pt
+small_molecules/structures/
+
+# Results (генерируются локально)
+targetdiff/docking/
+targetdiff/results/
+outputs/
+docking/
+results/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.eggs/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+*.swp
+
+# Logs
+*.log
+.DS_Store
+**/.DS_Store
