@@ -101,7 +101,7 @@ class PharmacophoreField(nn.Module):
         d2 = torch.cdist(x, self.P, p=2) ** 2
 
         # Match ligand atom types to hotspot types (N, M)
-        c_match = c @ self.TYPE.T
+        c_match = c.detach() @ self.TYPE.T   # typing defines TYPE, not a force; gradient flows via distance only
 
         # Raw Gaussian overlap (N, M)
         raw = c_match * torch.exp(-self.beta * d2)

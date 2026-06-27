@@ -43,3 +43,6 @@ __pycache__/
 *.log
 .DS_Store
 **/.DS_Store
+*_H.pdb
+pocket_H.pdb
+test_integration.py

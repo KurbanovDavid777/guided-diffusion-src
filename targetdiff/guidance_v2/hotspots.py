@@ -151,6 +151,8 @@ def _parse_pdb_line(line: str) -> Optional[Tuple[str, str, int, str, str, np.nda
     try:
         atomname = line[12:16].strip()
         resname = line[17:20].strip()
+        NORMALIZE = {"HID":"HIS","HIE":"HIS","HIP":"HIS","ASH":"ASP","GLH":"GLU","CYX":"CYS","CYM":"CYS","LYN":"LYS"}
+        resname = NORMALIZE.get(resname, resname)
         if resname not in STANDARD_AA:       # (2) safety: skip non-AA residues
             return None
         chain = line[21].strip()
@@ -194,7 +196,7 @@ def _is_heavy(element: str) -> bool:
 def _find_hydrogen_for_atom(
     heavy_atom: Tuple[str, str, int, str, str, np.ndarray, str],
     residue_atoms: List[Tuple[str, str, int, str, str, np.ndarray, str]],
-    max_xh: float = 1.3,  # Å, covalent X–H upper bound (N–H/O–H ~1.0, S–H ~1.35)
+    max_xh: float = 1.4,  # Å, covalent X–H upper bound (N–H/O–H ~1.0, S–H ~1.35)
 ) -> Optional[np.ndarray]:
     """
     Return coords of the hydrogen covalently bound to `heavy_atom`,
@@ -300,7 +302,7 @@ def extract_hotspots(
             continue
 
         # 1. Backbone donors
-        if atom_name in BACKBONE_DONOR:
+        if atom_name in BACKBONE_DONOR and resname != "PRO":
             h_coord = _find_hydrogen_for_atom(rec, residues[(chain, resseq)])
             if h_coord is not None:
                 vec = h_coord - coord
@@ -366,19 +368,19 @@ def extract_hotspots(
             pos = coord + D_HYDRO * direction
             _add("hydrophobic", pos, 1.0, source_id, None)
 
-        # 6. Negatively charged atoms → ligand “pos”
-        if resname in NEG_CHARGED and atom_name in NEG_CHARGED[resname]:
-            vec = centroid - coord
-            direction = _unit_vector(vec)
-            pos = coord + D_SALT * direction
-            _add("pos", pos, 1.0, source_id, None)
-
-        # 7. Positively charged atoms → ligand “neg”
-        if resname in POS_CHARGED and atom_name in POS_CHARGED[resname]:
-            vec = centroid - coord
-            direction = _unit_vector(vec)
-            pos = coord + D_SALT * direction
-            _add("neg", pos, 1.0, source_id, None)
+        # # 6. Negatively charged atoms → ligand “pos”
+        # if resname in NEG_CHARGED and atom_name in NEG_CHARGED[resname]:
+        #     vec = centroid - coord
+        #     direction = _unit_vector(vec)
+        #     pos = coord + D_SALT * direction
+        #     _add("pos", pos, 1.0, source_id, None)
+        #
+        # # 7. Positively charged atoms → ligand “neg”
+        # if resname in POS_CHARGED and atom_name in POS_CHARGED[resname]:
+        #     vec = centroid - coord
+        #     direction = _unit_vector(vec)
+        #     pos = coord + D_SALT * direction
+        #     _add("neg", pos, 1.0, source_id, None)
 
     # ----------------------------------------------------------------------- #
     # Merge duplicates

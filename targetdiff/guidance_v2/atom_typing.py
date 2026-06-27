@@ -12,10 +12,10 @@ BASE_TYPES: Dict[str, List[float]] = {
     "O": [0.8, 0.4, 0.0, 0.0, 0.0],
     "C": [0.0, 0.0, 0.8, 0.0, 0.0],
     "S": [0.3, 0.0, 0.5, 0.0, 0.0],
-    "F": [0.2, 0.0, 0.6, 0.0, 0.0],
-    "Cl": [0.2, 0.0, 0.6, 0.0, 0.0],
-    "Br": [0.2, 0.0, 0.6, 0.0, 0.0],
-    "I": [0.2, 0.0, 0.6, 0.0, 0.0],
+    "F": [0.1, 0.0, 0.7, 0.0, 0.0],    # F: very weak acceptor, mostly lipophilic
+    "Cl": [0.0, 0.0, 0.8, 0.0, 0.0],   # halogens: hydrophobic (X-bonds via σ-hole not modeled)
+    "Br": [0.0, 0.0, 0.8, 0.0, 0.0],
+    "I": [0.0, 0.0, 0.8, 0.0, 0.0],
     # default for unknown elements
     "default": [0.0, 0.0, 0.0, 0.0, 0.0],
 }
@@ -24,74 +24,90 @@ BASE_TYPES: Dict[str, List[float]] = {
 #  Soft atom‑type assignment
 # --------------------------------------------------------------------------------------------------- #
 def soft_atom_types(
-    coords: torch.Tensor,          # (N, 3) – ligand atom coordinates
-    elements: List[str],           # length N – atomic symbols
-    tau: float = 1.0,              # softness temperature for geometry gates
-) -> torch.Tensor:                 # (N, T) – soft membership, differentiable in coords
+    coords: torch.Tensor,          # (N, 3) ligand atom coordinates
+    elements: List[str],           # length N, atomic symbols
+    tau: float = 0.5,              # softness temperature for geometry gates
+) -> torch.Tensor:                 # (N, T) soft membership, differentiable in coords
     """
-    Returns a soft membership matrix of shape (N, T) where T = len(TYPE_ORDER).
-    The matrix is differentiable w.r.t. `coords`.
+    Soft, differentiable pharmacophore typing from element + local geometry.
+
+    Functional (no in-place index assignment) so autograd is robust across
+    torch versions. CN (soft coordination number) is a surrogate for valence
+    saturation in the absence of bonds/hydrogens; known edge cases: pyridine,
+    aniline. Halogen bonds (σ-hole) are not modeled — heavy halogens are treated
+    as hydrophobic. Ether vs carbonyl/hydroxyl O is partially resolved via CN
+    (2 heavy neighbors → ether-like, donor suppressed)
+
+    Known limit: heavy-atom CN cannot distinguish hydroxyl (-OH, donor) from
+    carbonyl (=O, non-donor) — both have CN=1. Terminal O donor is a deliberate
+    low average (biased toward the more common carbonyl/ether case). Only ether
+    (CN=2) is resolved vs terminal O.    
+
     """
     device = coords.device
     N = coords.shape[0]
     T = len(TYPE_ORDER)
-
-    # 1. Base vectors for each atom
-    base_list = []
-    for el in elements:
-        base_list.append(BASE_TYPES.get(el, BASE_TYPES["default"]))
-    base = torch.tensor(base_list, dtype=torch.float32, device=device)  # (N, T)
-
-    # 2. Soft coordination number (coord_num)
-    dists = torch.cdist(coords, coords, p=2)          # (N, N)
-    mask = torch.ones_like(dists, dtype=torch.bool, device=device)
-    mask.fill_diagonal_(False)
-    R_cut = 1.8  # Å
-    gate = torch.sigmoid((R_cut - dists) / tau)      # (N, N)
-    coord_num = (gate * mask.float()).sum(dim=1)     # (N,)
-
-    # 3. Geometry‑based modulation
-    idx_acceptor = TYPE_ORDER.index("acceptor")
-    idx_donor = TYPE_ORDER.index("donor")
-    idx_hydrophobic = TYPE_ORDER.index("hydrophobic")
+    idx_acc = TYPE_ORDER.index("acceptor")
+    idx_don = TYPE_ORDER.index("donor")
     idx_pos = TYPE_ORDER.index("pos")
-    idx_neg = TYPE_ORDER.index("neg")
 
-    for el in set(elements):
-        mask_el = torch.tensor([e == el for e in elements], dtype=torch.bool, device=device)
-        if not mask_el.any():
-            continue
-        cn = coord_num[mask_el]          # (n_el,)
+    # 1. Base vectors per atom (element lookup; non-differentiable, as intended)
+    base = torch.tensor(
+        [BASE_TYPES.get(el, BASE_TYPES["default"]) for el in elements],
+        dtype=torch.float32, device=device,
+    )  # (N, T)
 
-        if el == "N":
-            thr = 2.0
-            thr_pos = 3.0
-            donor_factor = torch.sigmoid((thr - cn) / tau)
-            acceptor_factor = torch.sigmoid((cn - thr) / tau)
-            pos_factor = torch.sigmoid((cn - thr_pos) / tau)
-            base[mask_el, idx_donor] *= donor_factor
-            base[mask_el, idx_acceptor] *= acceptor_factor
-            base[mask_el, idx_pos] += pos_factor * 0.3
+    # 2. Soft coordination number (differentiable in coords)
+    dists = torch.cdist(coords, coords, p=2)          # (N, N)
+    R_cut = 1.8                                        # Å, heavy-atom neighbor cutoff
+    gate = torch.sigmoid((R_cut - dists) / tau)       # (N, N)
+    eye = torch.eye(N, device=device)                 # exclude self
+    coord_num = (gate * (1.0 - eye)).sum(dim=1)       # (N,)
 
-        elif el == "O":
-            # O is dominantly an acceptor; donor only mildly raised for hydroxyl-like (low CN)
-            thr = 1.5
-            donor_factor = torch.sigmoid((thr - cn) / tau)        # mild donor boost when terminal-ish
-            base[mask_el, idx_donor] *= (0.3 + 0.4 * donor_factor)  # donor stays modest
-            # acceptor stays strong; do NOT suppress it by CN
-            # (optional tiny CN penalty only when heavily coordinated)
-            acceptor_keep = torch.sigmoid((3.0 - cn) / tau)        # only drop if CN very high (>3)
-            base[mask_el, idx_acceptor] *= (0.6 + 0.4 * acceptor_keep)
+    # 3. Per-element soft multipliers, built FUNCTIONALLY (no in-place on `base`)
+    #    We assemble a multiplier matrix `mult` (N, T) then base * mult.
+    is_N = torch.tensor([e == "N" for e in elements], dtype=torch.float32, device=device)  # (N,)
+    is_O = torch.tensor([e == "O" for e in elements], dtype=torch.float32, device=device)
 
-        elif el == "S":
-            thr = 2.0
-            acceptor_factor = torch.sigmoid((cn - thr) / tau)
-            base[mask_el, idx_acceptor] *= acceptor_factor
+    # gates as smooth functions of coord_num (N,)
+    g_low_N  = torch.sigmoid((2.0 - coord_num) / tau)   # low CN  -> donor-ish N (amine)
+    g_high_N = torch.sigmoid((coord_num - 2.0) / tau)   # high CN -> acceptor-ish N
+    g_pos_N  = torch.sigmoid((coord_num - 3.0) / tau)   # very high CN -> protonated/quaternary -> pos
 
-        # halogens and other elements: no modulation
+    g_ether  = torch.sigmoid((coord_num - 1.5) / tau)   # O with ~2 neighbors -> ether-like
+    g_term_O = torch.sigmoid((1.5 - coord_num) / tau)   # O with ~1 neighbor  -> carbonyl/hydroxyl
+    g_keepA  = torch.sigmoid((3.0 - coord_num) / tau)   # drop acceptor only if very high CN
+
+    # Start from all-ones multiplier; fill per type/element via masks (functional).
+    mult = torch.ones((N, T), dtype=torch.float32, device=device)
+
+    # --- Nitrogen: donor scaled by low-CN, acceptor by high-CN ---
+    don_mult_N = g_low_N
+    acc_mult_N = g_high_N
+    mult = mult + is_N.unsqueeze(1) * (
+        torch.nn.functional.one_hot(torch.tensor(idx_don, device=device), T).float() * (don_mult_N - 1.0).unsqueeze(1)
+        + torch.nn.functional.one_hot(torch.tensor(idx_acc, device=device), T).float() * (acc_mult_N - 1.0).unsqueeze(1)
+    )
+
+    # --- Oxygen: acceptor stays strong; donor suppressed for ether-like (high CN) ---
+    # Terminal O (CN=1) is ambiguous: hydroxyl (donor) vs carbonyl (NOT donor).
+    # Heavy-atom CN cannot separate them (both CN=1) without H/bonds.
+    # Most terminal O in drug-like ligands are carbonyl/ether, so keep donor LOW.
+    don_mult_O = (0.15 + 0.25 * g_term_O) * (1.0 - 0.8 * g_ether)
+    acc_mult_O = (0.6 + 0.4 * g_keepA)                            # acceptor stays 0.6..1.0
+    mult = mult + is_O.unsqueeze(1) * (
+        torch.nn.functional.one_hot(torch.tensor(idx_don, device=device), T).float() * (don_mult_O - 1.0).unsqueeze(1)
+        + torch.nn.functional.one_hot(torch.tensor(idx_acc, device=device), T).float() * (acc_mult_O - 1.0).unsqueeze(1)
+    )
+
+    c = base * mult  # (N, T), functional — no in-place index writes
+
+    # --- pos channel for N at very high CN (additive, e.g. quaternary/protonated amine) ---
+    pos_add = is_N * g_pos_N * 0.3                                # (N,)
+    c = c + torch.nn.functional.one_hot(torch.tensor(idx_pos, device=device), T).float() * pos_add.unsqueeze(1)
 
     # 4. Clamp to [0, 1]
-    c = torch.clamp(base, 0.0, 1.0)   # (N, T)
+    c = torch.clamp(c, 0.0, 1.0)   # (N, T)
     return c
 
 
@@ -101,36 +117,50 @@ def soft_atom_types(
 if __name__ == "__main__":
     elements = ["N", "C", "C", "O", "C"]
     coords = torch.tensor(
-        [
-            [0.0, 0.0, 0.0],          # N
-            [1.4, 0.0, 0.0],          # C
-            [2.8, 0.0, 0.0],          # C
-            [4.2, 0.0, 0.0],          # O
-            [5.6, 0.0, 0.0],          # C
-        ],
+        [[0.0,0.0,0.0],[1.4,0.0,0.0],[2.8,0.0,0.0],[4.2,0.0,0.0],[5.6,0.0,0.0]],
         dtype=torch.float32,
     )
     coords.requires_grad_(True)
+    c = soft_atom_types(coords, elements)
+    print("Soft types (N, T):\n", c)
 
-    c = soft_atom_types(coords, elements, tau=0.5)
-    print("Soft types (N, T):")
-    print(c)
+    idx = {t: TYPE_ORDER.index(t) for t in TYPE_ORDER}
 
-    # Assertions
-    assert c.shape == (5, 5), "Shape mismatch"
-    assert torch.all(c >= 0) and torch.all(c <= 1), "Values out of [0,1]"
-    assert not torch.isnan(c).any(), "NaNs present"
+    # shape / range / nan
+    assert c.shape == (5, 5)
+    assert torch.all(c >= 0) and torch.all(c <= 1)
+    assert not torch.isnan(c).any()
 
-    idx_acceptor = TYPE_ORDER.index("acceptor")
-    idx_hydrophobic = TYPE_ORDER.index("hydrophobic")
-    idx_donor = TYPE_ORDER.index("donor")
+    # chemistry sanity
+    assert c[3, idx["acceptor"]] > c[3, idx["donor"]], "O should be more acceptor than donor"
+    assert c[1, idx["hydrophobic"]] > c[1, idx["donor"]], "C should be hydrophobic"
+    assert c[0, idx["donor"]] > 0.3, "N should donate"
 
-    assert c[3, idx_acceptor] > c[3, idx_donor], "O should be more acceptor than donor"
-    assert c[1, idx_hydrophobic] > c[1, idx_donor], "C not more hydrophobic"
-    assert c[0, idx_donor] > 0.3, "N not enough donor"
+    # gradient flows into coords (geometry is differentiable)
+    # differentiability AND locality (meaningful, not just non-zero):
+    g = torch.autograd.grad(c.sum(), coords, retain_graph=True)[0]
+    assert g is not None and not torch.all(g == 0), "typing must be differentiable in coords"
 
-    c.sum().backward()
-    assert coords.grad is not None, "No gradient"
-    assert not torch.all(coords.grad == 0), "Zero gradient"
+    # locality: an isolated atom (no heavy neighbors) has CN~0 -> typing must NOT
+    # depend on its coords (no phantom long-range gradient)
+    iso = torch.tensor([[0.0, 0.0, 0.0], [50.0, 0.0, 0.0]], dtype=torch.float32, requires_grad=True)
+    c_iso = soft_atom_types(iso, ["O", "O"])
+    g_iso = torch.autograd.grad(c_iso.sum(), iso, retain_graph=True)[0]
+    assert g_iso.norm() < 1e-3, f"isolated atoms should have ~0 typing gradient, got {g_iso.norm():.4f}"
+    print("locality grad norm (should be ~0):", round(g_iso.norm().item(), 6))
+
+    # ether O: 2 heavy neighbors -> donor suppressed vs terminal O
+    eth = torch.tensor([[0.0,0.0,0.0],[1.4,0.0,0.0],[2.8,0.0,0.0]], dtype=torch.float32)  # C-O-C
+    c_eth = soft_atom_types(eth, ["C","O","C"])
+    term = torch.tensor([[0.0,0.0,0.0],[1.4,0.0,0.0]], dtype=torch.float32)               # C=O terminal
+    c_term = soft_atom_types(term, ["C","O"])
+    assert c_eth[1, idx["donor"]] < c_term[1, idx["donor"]], "ether O should have less donor than terminal O"
+    print("ether O donor:", round(c_eth[1, idx['donor']].item(),3),
+          "| terminal O donor:", round(c_term[1, idx['donor']].item(),3))
+
+    # halogens: hydrophobic, not acceptor
+    c_hal = soft_atom_types(torch.randn(3,3), ["Cl","Br","I"])
+    assert torch.all(c_hal[:, idx["acceptor"]] < 0.05), "heavy halogens should not be acceptors"
+    assert torch.all(c_hal[:, idx["hydrophobic"]] > 0.5), "halogens should be hydrophobic"
+
     print("All tests passed.")
-
