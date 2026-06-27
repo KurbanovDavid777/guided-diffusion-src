@@ -11,7 +11,7 @@ __all__ = ["steric_penalty", "steric_gradient"]
 
 
 def steric_penalty(
-    x: torch.Tensor, sigma: float = 2.7
+    x: torch.Tensor, sigma: float = 0.9
 ) -> torch.Tensor:
     """
     Compute the steric penalty S_ster(x) = Σ_{i<j} exp(-||x_i - x_j||^2 / sigma^2).
@@ -32,10 +32,13 @@ def steric_penalty(
         raise ValueError("sigma must be positive")
 
     # Pairwise squared distances (N, N)
-    d2 = torch.cdist(x, x, p=2) ** 2  # (N, N)
+    diff = x[:, None, :] - x[None, :, :]          # (N, N, 3)
+    d2 = (diff ** 2).sum(-1)
 
     # Upper triangular indices (i < j)
-    iu = torch.triu_indices(d2.size(0), d2.size(1), offset=1)
+    N = x.size(0)
+    iu = torch.triu_indices(N, N, offset=1, device=x.device)   # device-safe
+    penalty = torch.exp(-d2[iu[0], iu[1]] / (sigma ** 2)).sum()
 
     # Compute penalty
     penalty = torch.exp(-d2[iu[0], iu[1]] / (sigma**2)).sum()
@@ -43,7 +46,7 @@ def steric_penalty(
 
 
 def steric_gradient(
-    x: torch.Tensor, sigma: float = 2.7
+    x: torch.Tensor, sigma: float = 0.9
 ) -> torch.Tensor:
     """
     Compute the gradient ∇_x S_ster via autograd.
@@ -82,7 +85,7 @@ if __name__ == "__main__":
         requires_grad=True,
     )
 
-    sigma = 2.7
+    sigma = 0.9
     penalty = steric_penalty(coords, sigma)
     grad = steric_gradient(coords, sigma)
 
@@ -110,6 +113,19 @@ if __name__ == "__main__":
     print(f"Distance before: {dist_before:.4f} Å")
     print(f"Distance after  : {dist_after:.4f} Å")
     assert dist_after > dist_before, "Repulsion did not increase distance"
+
+
+    # Finding 4: real-overlap regime — clash must dominate bond (sigma=0.9 separates them)
+    clash = torch.tensor([[0.0, 0.0, 0.0], [0.5, 0.0, 0.0]], dtype=torch.float32, requires_grad=True)
+    gc = steric_gradient(clash)        # default sigma=0.9
+    print(f"  clash d=0.5: |grad|={gc.norm().item():.3f}")   # should be large (~1.28)
+
+    bond = torch.tensor([[0.0, 0.0, 0.0], [1.5, 0.0, 0.0]], dtype=torch.float32, requires_grad=True)
+    gb = steric_gradient(bond)         # default sigma=0.9
+    print(f"  bond d=1.5:  |grad|={gb.norm().item():.3f}")    # should be small (~0.32)
+
+    # both must exist BEFORE the comparison
+    assert gc.norm().item() > 2.0 * gb.norm().item(), "clash must dominate bond (sigma separates them)"
 
     print("All tests passed.")
 
