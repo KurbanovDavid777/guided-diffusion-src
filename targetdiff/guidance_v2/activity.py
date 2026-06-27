@@ -98,7 +98,9 @@ class PharmacophoreField(nn.Module):
         c = c.to(self.device)
 
         # Pairwise squared distances (N, M)
-        d2 = torch.cdist(x, self.P, p=2) ** 2
+        diff = x[:, None, :] - self.P[None, :, :]   # (N, M, 3)
+        d2 = (diff ** 2).sum(-1)                      # (N, M), gradient-safe at d=0
+
 
         # Match ligand atom types to hotspot types (N, M)
         c_match = c.detach() @ self.TYPE.T   # typing defines TYPE, not a force; gradient flows via distance only
@@ -107,6 +109,9 @@ class PharmacophoreField(nn.Module):
         raw = c_match * torch.exp(-self.beta * d2)
 
         # Softmax normalization over atoms for each hotspot (N, M)
+        # Anti-collapse over atoms (dim=0): one hotspot can't be farmed by many atoms.
+        # NOTE: one-sided — does NOT penalize one atom satisfying many hotspots.
+        # That mirror case (per-atom cap = "satisfy some, not all") is TODO.
         norm = torch.softmax(-d2.detach(), dim=0)
 
         # Weighted sum over hotspots and atoms
@@ -229,6 +234,17 @@ if __name__ == "__main__":
     d2_after = torch.cdist(x_new[0:1], acceptor_positions, p=2).min()
     print("Distance before:", d2_before.item(), "after:", d2_after.item())
     assert d2_after < d2_before, "Atom 0 did not move closer to acceptor hotspot"
+
+    # --- Finding 2: capture-radius probe (NOT an assert — documents the dead zone) ---
+    # Sharp Gaussian (beta=2.5 -> sigma~0.45 A) means activity is a finishing force:
+    # an atom far from any hotspot feels almost no pull until beta-annealing (TODO in 2.6).
+    acc_col = TYPE_ORDER.index("acceptor")
+    acc_hot = field.P[(field.TYPE[:, acc_col] > 0.5)][0]
+    for dist in [0.5, 1.0, 1.5, 2.0, 3.0]:
+        probe = (acc_hot + torch.tensor([dist, 0.0, 0.0])).unsqueeze(0).clone().requires_grad_(True)
+        c_probe = torch.zeros(1, len(TYPE_ORDER)); c_probe[0, acc_col] = 1.0
+        gp = activity_gradient(field, probe, c_probe)
+        print(f"  capture radius: d={dist:.1f} A  ->  |grad|={gp.norm().item():.2e}")
 
     print("All tests passed.")
 
