@@ -35,10 +35,12 @@ class PharmacophoreField(nn.Module):
         self,
         hotspots_json: str,
         beta_per_type: Optional[Dict[str, float]] = None,
+        kappa: float = 1.0,          # angular sharpness; 0 = sphere (no angle), higher = tighter cone
         device: str = "cpu",
     ) -> None:
         super().__init__()
         self.device = torch.device(device)
+        self.kappa = float(kappa)
 
         # Load hotspot definitions
         try:
@@ -51,6 +53,7 @@ class PharmacophoreField(nn.Module):
         weights: list[float] = []
         type_indices: list[int] = []
         betas: list[float] = []
+        directions: list = [] 
 
         for hotspot in hotspots:
             pos = hotspot.get("position")
@@ -71,9 +74,17 @@ class PharmacophoreField(nn.Module):
             else:
                 betas.append(float(DEFAULT_BETA[ptype]))
 
+            d = hotspot.get("direction")
+            if d is not None and len(d) == 3:
+                directions.append(d)
+            else:
+                directions.append([0.0, 0.0, 0.0])   # hydrophobic/charged: no axis -> sphere
+
+
         # Convert to tensors
         self.P = torch.tensor(positions, dtype=torch.float32, device=self.device)  # (M,3)
         self.W = torch.tensor(weights, dtype=torch.float32, device=self.device)    # (M,)
+        self.D = torch.tensor(directions, dtype=torch.float32, device=self.device)  # (M, 3) cone axes; zero = sphere
 
         M = len(positions)
         T = len(TYPE_ORDER)
@@ -105,8 +116,22 @@ class PharmacophoreField(nn.Module):
         # Match ligand atom types to hotspot types (N, M)
         c_match = c.detach() @ self.TYPE.T   # typing defines TYPE, not a force; gradient flows via distance only
 
-        # Raw Gaussian overlap (N, M)
-        raw = c_match * torch.exp(-self.beta * d2)
+        # angular term: atom should approach the hotspot ALONG its H-bond axis.
+        # axis self.D[m] points from pocket heavy atom outward to the target point;
+        # the ligand atom should sit on that axis -> vector (x_i - p_m) aligned with D_m.
+        diff_hp = x[:, None, :] - self.P[None, :, :]          # (N, M, 3): from hotspot to atom
+        diff_norm = diff_hp.norm(dim=-1, keepdim=True).clamp_min(1e-6)
+        u = diff_hp / diff_norm                                # (N, M, 3) unit
+        D_norm = self.D.norm(dim=-1, keepdim=True)             # (M, 1)
+        has_axis = (D_norm.squeeze(-1) > 1e-6).float()         # (M,) 1 if directional, 0 if sphere
+        D_unit = -self.D / D_norm.clamp_min(1e-6)               # (M, 3)
+        cos_theta = (u * D_unit[None, :, :]).sum(-1)           # (N, M), angle atom-axis
+        # angular(θ) = exp(κ(cosθ − 1)); =1 when aligned, decays off-axis.
+        # for sphere hotspots (no axis) angular=1 (disabled) via has_axis mask.
+        angular = torch.exp(self.kappa * (cos_theta - 1.0))    # (N, M)
+        angular = angular * has_axis[None, :] + (1.0 - has_axis[None, :])  # sphere -> 1
+
+        raw = c_match * torch.exp(-self.beta * d2) * angular   # (N, M), now direction-aware
 
         # Softmax normalization over atoms for each hotspot (N, M)
         # Anti-collapse over atoms (dim=0): one hotspot can't be farmed by many atoms.
@@ -245,6 +270,31 @@ if __name__ == "__main__":
         c_probe = torch.zeros(1, len(TYPE_ORDER)); c_probe[0, acc_col] = 1.0
         gp = activity_gradient(field, probe, c_probe)
         print(f"  capture radius: d={dist:.1f} A  ->  |grad|={gp.norm().item():.2e}")
+
+
+
+    # angular term: at SAME distance, on-axis must beat off-axis
+    m0 = 0
+    p0 = field.P[m0]
+    axis0 = field.D[m0]
+    if axis0.norm() > 1e-6:
+        axis0 = axis0 / axis0.norm()
+        # build a vector strictly perpendicular to the axis (Gram-Schmidt)
+        ref = torch.tensor([1.0, 0.0, 0.0]) if abs(axis0[0]) < 0.9 else torch.tensor([0.0, 1.0, 0.0])
+        perp = ref - (ref @ axis0) * axis0
+        perp = perp / perp.norm()
+        r = 1.0
+        on_plus  = (p0 + r * axis0).unsqueeze(0).clone().requires_grad_(True)   # +axis side
+        on_minus = (p0 - r * axis0).unsqueeze(0).clone().requires_grad_(True)   # -axis side
+        off_axis = (p0 + r * perp).unsqueeze(0).clone().requires_grad_(True)    # perpendicular
+        c1 = torch.zeros(1, len(TYPE_ORDER)); c1[0, int(field.TYPE[m0].argmax())] = 1.0
+        s_plus  = field(on_plus,  c1).item()
+        s_minus = field(on_minus, c1).item()
+        s_off   = field(off_axis, c1).item()
+        print(f"  angular: +axis S={s_plus:.4f}  -axis S={s_minus:.4f}  off S={s_off:.4f}")
+        s_on = max(s_plus, s_minus)
+        assert s_on > s_off, "angular term must favor on-axis approach"
+
 
     print("All tests passed.")
 
