@@ -70,8 +70,8 @@ def soft_atom_types(
     is_O = torch.tensor([e == "O" for e in elements], dtype=torch.float32, device=device)
 
     # gates as smooth functions of coord_num (N,)
-    g_low_N  = torch.sigmoid((2.0 - coord_num) / tau)   # low CN  -> donor-ish N (amine)
-    g_high_N = torch.sigmoid((coord_num - 2.0) / tau)   # high CN -> acceptor-ish N
+    g_low_N  = torch.sigmoid((1.5 - coord_num) / tau)   # CN<1.5 (terminal amine) -> donor
+    g_high_N = torch.sigmoid((coord_num - 1.5) / tau)   # CN>1.5 (ring/imine) -> acceptor
     g_pos_N  = torch.sigmoid((coord_num - 3.0) / tau)   # very high CN -> protonated/quaternary -> pos
 
     g_ether  = torch.sigmoid((coord_num - 1.5) / tau)   # O with ~2 neighbors -> ether-like
@@ -82,8 +82,8 @@ def soft_atom_types(
     mult = torch.ones((N, T), dtype=torch.float32, device=device)
 
     # --- Nitrogen: donor scaled by low-CN, acceptor by high-CN ---
-    don_mult_N = g_low_N
-    acc_mult_N = g_high_N
+    don_mult_N = g_low_N * g_low_N        # squared: ring N donor suppressed harder
+    acc_mult_N = 0.3 + 1.2 * g_high_N     # ring N acceptor boosted above base
     mult = mult + is_N.unsqueeze(1) * (
         torch.nn.functional.one_hot(torch.tensor(idx_don, device=device), T).float() * (don_mult_N - 1.0).unsqueeze(1)
         + torch.nn.functional.one_hot(torch.tensor(idx_acc, device=device), T).float() * (acc_mult_N - 1.0).unsqueeze(1)
