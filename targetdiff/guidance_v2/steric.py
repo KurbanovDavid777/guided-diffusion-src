@@ -11,7 +11,7 @@ __all__ = ["steric_penalty", "steric_gradient"]
 
 
 def steric_penalty(
-    x: torch.Tensor, sigma: float = 0.9
+    x: torch.Tensor, A: float = 1.0, rho: float = 0.35
 ) -> torch.Tensor:
     """
     Compute the steric penalty S_ster(x) = Σ_{i<j} exp(-||x_i - x_j||^2 / sigma^2).
@@ -28,25 +28,22 @@ def steric_penalty(
     torch.Tensor
         Scalar steric penalty.
     """
-    if sigma <= 0:
-        raise ValueError("sigma must be positive")
+    if rho <= 0:
+        raise ValueError("rho must be positive")
 
-    # Pairwise squared distances (N, N)
     diff = x[:, None, :] - x[None, :, :]          # (N, N, 3)
-    d2 = (diff ** 2).sum(-1)
-
-    # Upper triangular indices (i < j)
+    d2 = (diff ** 2).sum(-1)                        # (N, N), gradient-safe at d=0
     N = x.size(0)
     iu = torch.triu_indices(N, N, offset=1, device=x.device)   # device-safe
-    penalty = torch.exp(-d2[iu[0], iu[1]] / (sigma ** 2)).sum()
-
-    # Compute penalty
-    penalty = torch.exp(-d2[iu[0], iu[1]] / (sigma**2)).sum()
+    d = torch.sqrt(d2[iu[0], iu[1]].clamp_min(1e-8))           # (P,) pairwise dist; clamp for grad safety
+    # Buckingham (Born-Mayer) repulsion: A * exp(-d / rho)
+    # exp form = Pauli repulsion from electron-shell overlap; finite at d=0 (no singularity)
+    penalty = (A * torch.exp(-d / rho)).sum()
     return penalty
 
 
 def steric_gradient(
-    x: torch.Tensor, sigma: float = 0.9
+    x: torch.Tensor, A: float = 1.0, rho: float = 0.35
 ) -> torch.Tensor:
     """
     Compute the gradient ∇_x S_ster via autograd.
@@ -63,7 +60,7 @@ def steric_gradient(
     torch.Tensor
         (N, 3) gradient tensor.
     """
-    penalty = steric_penalty(x, sigma)
+    penalty = steric_penalty(x, A=A, rho=rho)
     grad = torch.autograd.grad(penalty, x, create_graph=False)[0]
     return grad
 
@@ -85,9 +82,8 @@ if __name__ == "__main__":
         requires_grad=True,
     )
 
-    sigma = 0.9
-    penalty = steric_penalty(coords, sigma)
-    grad = steric_gradient(coords, sigma)
+    penalty = steric_penalty(coords)          # default A=1.0, rho=0.35
+    grad = steric_gradient(coords)
 
     print("Penalty shape:", penalty.shape, "value:", penalty.item())
     print("Gradient shape:", grad.shape)
