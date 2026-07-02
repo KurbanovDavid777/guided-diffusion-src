@@ -655,6 +655,28 @@ class ScorePosNet3D(nn.Module):
         pos_traj, v_traj = [], []
         v0_pred_traj, vt_pred_traj = [], []
         ligand_pos, ligand_v = init_ligand_pos, init_ligand_v
+
+
+        # ── Guidance v2 setup (once, before loop) ──
+        gv2_field = getattr(self, 'gv2_field', None)
+        gv2_elements = None
+        if gv2_field is not None:
+            import sys as _sys, os as _os
+            _repo_root = _os.path.abspath(_os.path.join(_os.path.dirname(__file__), '..', '..'))
+            if _repo_root not in _sys.path:
+                _sys.path.insert(0, _repo_root)
+            from targetdiff.guidance_v2.guidance_hook import (
+                compute_guidance_force, atomic_numbers_to_symbols)
+            from targetdiff.utils.transforms import get_atomic_number_from_index
+
+            gv2_mode      = getattr(self, 'gv2_atom_mode', 'add_aromatic')
+            gv2_l_act     = getattr(self, 'gv2_lambda_act', 1.0)
+            gv2_l_ster    = getattr(self, 'gv2_lambda_ster', 1.0)
+            gv2_scale     = getattr(self, 'gv2_scale', 1.0)
+            gv2_sigma_max = float(self.sqrt_one_minus_alphas_cumprod.max().item())
+            _atomic = get_atomic_number_from_index(ligand_v.detach().cpu(), mode=gv2_mode)
+            gv2_elements = atomic_numbers_to_symbols(_atomic)   # fixed over steps
+
         # time sequence
         time_seq = list(reversed(range(self.num_timesteps - num_steps, self.num_timesteps)))
         for i in tqdm(time_seq, desc='sampling', total=len(time_seq)):
@@ -688,56 +710,17 @@ class ScorePosNet3D(nn.Module):
                 ligand_pos)
             ligand_pos = ligand_pos_next
 
-            # ── Guidance ──────────────────────────────────────────────────
-            if guidance_scale > 0 and pos0_from_e is not None and i < guidance_start_step:
-                try:
-                    with torch.enable_grad():
-                        pos0_grad = pos0_from_e.detach().requires_grad_(True)
 
-                        # 1. Similarity penalty — толкаем ОТ референсов
-                        sim_penalty = torch.tensor(0.0)
-                        if encoder is not None and z_refs is not None:
-                            try:
-                                z_gen = encoder(
-                                    torch.zeros(pos0_grad.shape[0],
-                                                dtype=torch.long),
-                                    pos0_grad,
-                                    batch_ligand
-                                )
-                                sims = torch.stack([
-                                    torch.nn.functional.cosine_similarity(
-                                        z_gen, z_ref.unsqueeze(0)
-                                    )
-                                    for z_ref in z_refs
-                                ])
-                                sim_penalty = sims.max()
-                            except Exception:
-                                pass
-
-                        # 2. Pharmacophore penalty — тянем К точкам кармана
-                        pharma_penalty = torch.tensor(0.0)
-                        if pharma_coords is not None:
-                            try:
-                                pc = pharma_coords.to(pos0_grad.device)
-                                dists = torch.cdist(pos0_grad, pc)
-                                pharma_penalty = dists.min(dim=1).values.mean()
-                            except Exception:
-                                pass
-
-                        # 3. Итоговый reward
-                        reward = (- beta  * sim_penalty
-                                  - gamma * pharma_penalty)
-
-                        if reward.requires_grad:
-                            grad = torch.autograd.grad(
-                                reward, pos0_grad,
-                                retain_graph=False
-                            )[0]
-                            ligand_pos = (ligand_pos +
-                                          guidance_scale * grad.detach())
-                except Exception:
-                    pass
-            # ── End Guidance ───────────────────────────────────────────────
+            # ── Guidance v2: activity + steric with beta-annealing ──
+            if gv2_field is not None and pos0_from_e is not None:
+                sigma_t = float(extract(self.sqrt_one_minus_alphas_cumprod, t, batch_ligand)[0].item())
+                force = compute_guidance_force(
+                    pos0_from_e, gv2_elements, gv2_field,
+                    sigma_t=sigma_t, sigma_max=gv2_sigma_max,
+                    lambda_act=gv2_l_act, lambda_ster=gv2_l_ster,
+                )
+                ligand_pos = ligand_pos + gv2_scale * force.to(ligand_pos.device)
+            # ── End Guidance v2 ──
 
 
             if not pos_only:

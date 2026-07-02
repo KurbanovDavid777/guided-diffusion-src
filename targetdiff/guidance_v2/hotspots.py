@@ -122,6 +122,7 @@ class Hotspot:
     weight: float = 1.0   # confidence
     source: str = ""      # e.g. "A:SER195:OG"
     direction: Optional[np.ndarray] = None  # (3,) unit vector along interaction
+    apex: Optional[np.ndarray] = None   # coord of the source protein atom (for PLIP matching)
 
 
 # --------------------------------------------------------------------------- #
@@ -292,8 +293,10 @@ def extract_hotspots(
     hotspots: List[Hotspot] = []
 
     # Helper to add hotspot
-    def _add(ptype: str, pos: np.ndarray, weight: float, source: str, direction: Optional[np.ndarray]):
-        hotspots.append(Hotspot(position=pos, ptype=ptype, weight=weight, source=source, direction=direction))
+    def _add(ptype: str, pos: np.ndarray, weight: float, source: str,
+             direction: Optional[np.ndarray], apex: Optional[np.ndarray]):
+        hotspots.append(Hotspot(position=pos, ptype=ptype, weight=weight, source=source,
+                                direction=direction, apex=apex))
 
     # Iterate over all heavy atoms
     for rec in atoms:
@@ -308,12 +311,12 @@ def extract_hotspots(
                 vec = h_coord - coord
                 direction = _unit_vector(vec)
                 pos = coord + D_HB * direction
-                _add("acceptor", pos, 1.0, source_id, direction)
+                _add("acceptor", pos, 1.0, source_id, direction, coord)
             else:
                 vec = centroid - coord
                 direction = _unit_vector(vec)
                 pos = coord + D_HB * direction
-                _add("acceptor", pos, FALLBACK_WEIGHT, source_id, direction)
+                _add("acceptor", pos, FALLBACK_WEIGHT, source_id, direction, coord)
                 warnings.warn(f"Donor {source_id} missing hydrogen – fallback used.", RuntimeWarning)
 
         # 2. Backbone acceptors
@@ -323,12 +326,12 @@ def extract_hotspots(
                 vec = coord - neighbor
                 direction = _unit_vector(vec)
                 pos = coord + D_HB * direction
-                _add("donor", pos, 1.0, source_id, direction)
+                _add("donor", pos, 1.0, source_id, direction, coord)
             else:
                 vec = centroid - coord
                 direction = _unit_vector(vec)
                 pos = coord + D_HB * direction
-                _add("donor", pos, FALLBACK_WEIGHT, source_id, direction)
+                _add("donor", pos, FALLBACK_WEIGHT, source_id, direction, coord)
                 warnings.warn(f"Acceptor {source_id} missing heavy neighbor – fallback used.", RuntimeWarning)
 
         # 3. Side‑chain donors
@@ -338,12 +341,12 @@ def extract_hotspots(
                 vec = h_coord - coord
                 direction = _unit_vector(vec)
                 pos = coord + D_HB * direction
-                _add("acceptor", pos, 1.0, source_id, direction)
+                _add("acceptor", pos, 1.0, source_id, direction, coord)
             else:
                 vec = centroid - coord
                 direction = _unit_vector(vec)
                 pos = coord + D_HB * direction
-                _add("acceptor", pos, FALLBACK_WEIGHT, source_id, direction)
+                _add("acceptor", pos, FALLBACK_WEIGHT, source_id, direction, coord)
                 warnings.warn(f"Side‑chain donor {source_id} missing hydrogen – fallback used.", RuntimeWarning)
 
         # 4. Side‑chain acceptors
@@ -353,12 +356,12 @@ def extract_hotspots(
                 vec = coord - neighbor
                 direction = _unit_vector(vec)
                 pos = coord + D_HB * direction
-                _add("donor", pos, 1.0, source_id, direction)
+                _add("donor", pos, 1.0, source_id, direction, coord)
             else:
                 vec = centroid - coord
                 direction = _unit_vector(vec)
                 pos = coord + D_HB * direction
-                _add("donor", pos, FALLBACK_WEIGHT, source_id, direction)
+                _add("donor", pos, FALLBACK_WEIGHT, source_id, direction, coord)
                 warnings.warn(f"Side‑chain acceptor {source_id} missing heavy neighbor – fallback used.", RuntimeWarning)
 
         # 5. Hydrophobic atoms
@@ -366,21 +369,21 @@ def extract_hotspots(
             vec = centroid - coord
             direction = _unit_vector(vec)
             pos = coord + D_HYDRO * direction
-            _add("hydrophobic", pos, 1.0, source_id, None)
+            _add("hydrophobic", pos, 1.0, source_id, None, coord)
 
         # # 6. Negatively charged atoms → ligand “pos”
         # if resname in NEG_CHARGED and atom_name in NEG_CHARGED[resname]:
         #     vec = centroid - coord
         #     direction = _unit_vector(vec)
         #     pos = coord + D_SALT * direction
-        #     _add("pos", pos, 1.0, source_id, None)
+        #     _add("pos", pos, 1.0, source_id, None, coord)
         #
         # # 7. Positively charged atoms → ligand “neg”
         # if resname in POS_CHARGED and atom_name in POS_CHARGED[resname]:
         #     vec = centroid - coord
         #     direction = _unit_vector(vec)
         #     pos = coord + D_SALT * direction
-        #     _add("neg", pos, 1.0, source_id, None)
+        #     _add("neg", pos, 1.0, source_id, None ,coord)
 
     # ----------------------------------------------------------------------- #
     # Merge duplicates
@@ -414,6 +417,8 @@ def extract_hotspots(
             merged_dir = avg_dir / n if n > 0 else None
         else:
             merged_dir = None
+        apexes = [g.apex for g in group if g.apex is not None]
+        merged_apex = apexes[0] if apexes else None   # keep first source atom as apex
         merged.append(
             Hotspot(
                 position=avg_pos,
@@ -421,6 +426,7 @@ def extract_hotspots(
                 weight=total_weight,
                 source=sources,
                 direction=merged_dir,
+                apex=merged_apex,
             )
         )
     return merged
@@ -440,6 +446,7 @@ def _to_json(hotspots: List[Hotspot]) -> List[dict]:
                 "weight": h.weight,
                 "source": h.source,
                 "direction": h.direction.tolist() if h.direction is not None else None,
+                "apex": h.apex.tolist() if h.apex is not None else None,
             }
         )
     return out

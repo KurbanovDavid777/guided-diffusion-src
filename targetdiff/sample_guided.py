@@ -116,6 +116,15 @@ def main():
                         help='Apply guidance only when t < this value')
     parser.add_argument('--guidance_scale', type=float, default=0.05,
                         help='Guidance step size')
+    parser.add_argument('--gv2_hotspots', type=str, default=None,
+                        help='Path to hotspots JSON (activity+steric guidance-v2)')
+    parser.add_argument('--gv2_lambda_act', type=float, default=1.0)
+
+    parser.add_argument('--gv2_lambda_ster', type=float, default=1.0)
+
+    parser.add_argument('--gv2_scale', type=float, default=0.1,
+                        help='Overall guidance-v2 gain applied to the force')
+
     parser.add_argument('--encoder_path',  type=str,
                         default='encoder/mol_encoder.pt')
     parser.add_argument('--z_refs_path',   type=str,
@@ -215,6 +224,27 @@ def main():
     model.pharma_coords       = pharma_coords
     model.typed_pharma_coords = typed_pharma_coords
     model.affinity_model = None
+
+    # ── Guidance v2 setup (activity + steric, geometry-native) ──
+    gv2_hotspots = getattr(args, 'gv2_hotspots', None)
+    if gv2_hotspots and Path(gv2_hotspots).exists():
+        import sys as _sys, os as _os
+        _repo_root = _os.path.abspath(_os.path.join(_os.path.dirname(__file__), '..'))
+        if _repo_root not in _sys.path:
+            _sys.path.insert(0, _repo_root)
+        from targetdiff.guidance_v2.activity import PharmacophoreField
+        logger.info(f'Loading guidance-v2 hotspots from {gv2_hotspots}...')
+        model.gv2_field       = PharmacophoreField(gv2_hotspots, device=args.device)
+        model.gv2_atom_mode   = ligand_atom_mode
+        model.gv2_lambda_act  = args.gv2_lambda_act
+        model.gv2_lambda_ster = args.gv2_lambda_ster
+        model.gv2_scale       = args.gv2_scale
+        logger.info(f'Guidance-v2 active: {len(model.gv2_field.P)} hotspots, '
+                    f'l_act={args.gv2_lambda_act}, l_ster={args.gv2_lambda_ster}, scale={args.gv2_scale}')
+    else:
+        model.gv2_field = None
+        logger.warning('Guidance-v2 hotspots not provided — geometry-native guidance OFF')
+
 
     logger.info(f'Guidance: scale={args.guidance_scale} '
                 f'beta={args.beta} gamma={args.gamma}')

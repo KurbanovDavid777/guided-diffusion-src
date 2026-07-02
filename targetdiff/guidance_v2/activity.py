@@ -42,6 +42,7 @@ class PharmacophoreField(nn.Module):
         self.device = torch.device(device)
         self.kappa = float(kappa)
 
+
         # Load hotspot definitions
         try:
             with open(hotspots_json, "r") as f:
@@ -93,6 +94,13 @@ class PharmacophoreField(nn.Module):
         self.TYPE = type_onehot  # (M,T)
 
         self.beta = torch.tensor(betas, dtype=torch.float32, device=self.device)  # (M,)
+
+    def set_beta_scale(self, scale: float) -> None:
+        """Scale all per-hotspot beta by `scale` for beta-annealing over diffusion time.
+        scale<1 -> wider Gaussian (early/noisy); scale=1 -> original sharp beta (late)."""
+        if not hasattr(self, "_beta_base"):
+            self._beta_base = self.beta.clone()   # store original once
+        self.beta = self._beta_base * float(scale)
 
     def forward(self, x: torch.Tensor, c: torch.Tensor) -> torch.Tensor:
         """
