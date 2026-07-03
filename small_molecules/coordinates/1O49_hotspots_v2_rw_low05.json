@@ -6,7 +6,7 @@
       16.750132023023497
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "A:ARG1:N",
     "direction": [
       0.4658038148120901,
@@ -17,7 +17,10 @@
       10.666,
       31.257,
       19.102
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -26,7 +29,7 @@
       24.48388458393052
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "A:ARG1:O",
     "direction": [
       -0.3252534711728675,
@@ -37,7 +40,10 @@
       10.051,
       30.368,
       22.406
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -46,7 +52,7 @@
       25.31789717328102
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 1.7000000000000002,
     "source": "A:ARG1:NE",
     "direction": [
       -0.08730766497786319,
@@ -57,7 +63,10 @@
       15.436,
       30.373,
       22.574
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 8,
+    "frequency": 0.8
   },
   {
     "position": [
@@ -66,7 +75,7 @@
       26.032081153007628
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 2.0,
     "source": "A:ARG1:NH2",
     "direction": [
       -0.14326265030114174,
@@ -77,7 +86,10 @@
       16.946,
       28.831,
       23.336
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 10,
+    "frequency": 1.0
   },
   {
     "position": [
@@ -86,7 +98,7 @@
       18.86168287376282
     ],
     "ptype": "acceptor",
-    "weight": 2.0,
+    "weight": 1.7000000000000002,
     "source": "A:ARG1:NH1, C:ARG1:NH2",
     "direction": [
       0.28374975616727244,
@@ -97,7 +109,10 @@
       16.561,
       28.977,
       21.069
-    ]
+    ],
+    "weight_level0": 2.0,
+    "support_count": 8,
+    "frequency": 0.8
   },
   {
     "position": [
@@ -106,7 +121,7 @@
       23.170477882000746
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "B:LEU1:N",
     "direction": [
       -0.7610663643394692,
@@ -117,7 +132,10 @@
       6.367,
       20.556,
       21.299
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -126,7 +144,7 @@
       20.765943011934315
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "B:LEU1:O",
     "direction": [
       0.9141546575294042,
@@ -137,7 +155,10 @@
       8.227,
       21.087,
       19.594
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -146,14 +167,17 @@
       19.707602215129604
     ],
     "ptype": "hydrophobic",
-    "weight": 2.0,
+    "weight": 0.5,
     "source": "B:LEU1:CB, B:LEU1:CG",
     "direction": null,
     "apex": [
       5.302,
       22.403,
       20.171
-    ]
+    ],
+    "weight_level0": 2.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -162,14 +186,17 @@
       19.13512975521435
     ],
     "ptype": "hydrophobic",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "B:LEU1:CD1",
     "direction": null,
     "apex": [
       6.883,
       24.338,
       19.507
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -178,14 +205,17 @@
       20.432600805783604
     ],
     "ptype": "hydrophobic",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "B:LEU1:CD2",
     "direction": null,
     "apex": [
       5.299,
       24.505,
       21.483
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -194,7 +224,7 @@
       17.91128928110934
     ],
     "ptype": "acceptor",
-    "weight": 2.0,
+    "weight": 0.5,
     "source": "C:ARG1:N, F:SER5:OG",
     "direction": [
       0.8568791653493854,
@@ -205,7 +235,10 @@
       8.667,
       23.128,
       15.776
-    ]
+    ],
+    "weight_level0": 2.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -214,7 +247,7 @@
       14.073
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "C:ARG1:O",
     "direction": [
       0.7841134787247582,
@@ -225,7 +258,10 @@
       10.534,
       23.863,
       14.073
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -234,7 +270,7 @@
       21.42115799768083
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 1.1,
     "source": "C:ARG1:NE",
     "direction": [
       -0.08940628976415477,
@@ -245,7 +281,10 @@
       10.757,
       26.852,
       18.849
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 4,
+    "frequency": 0.4
   },
   {
     "position": [
@@ -254,7 +293,7 @@
       15.454204411610524
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 1.1,
     "source": "C:ARG1:NH1",
     "direction": [
       -0.7417454438476064,
@@ -265,7 +304,10 @@
       12.079,
       28.026,
       17.399
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 4,
+    "frequency": 0.4
   },
   {
     "position": [
@@ -274,7 +316,7 @@
       13.587045873462653
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "D:SER1:N",
     "direction": [
       -0.8701009899363596,
@@ -285,7 +327,10 @@
       12.926,
       26.328,
       12.745
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -294,7 +339,7 @@
       9.100304416234042
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 1.4,
     "source": "D:SER1:O",
     "direction": [
       -0.2792229100130767,
@@ -305,7 +350,10 @@
       13.565,
       28.818,
       11.805
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 6,
+    "frequency": 0.6
   },
   {
     "position": [
@@ -314,7 +362,7 @@
       16.067871134707385
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.65,
     "source": "D:SER1:OG",
     "direction": [
       0.061872835636641844,
@@ -325,7 +373,10 @@
       16.415,
       27.389,
       13.188
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 1,
+    "frequency": 0.1
   },
   {
     "position": [
@@ -334,7 +385,7 @@
       13.842667939994664
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.65,
     "source": "D:SER1:OG",
     "direction": [
       0.7410409215831616,
@@ -345,7 +396,10 @@
       16.415,
       27.389,
       13.188
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 1,
+    "frequency": 0.1
   },
   {
     "position": [
@@ -354,7 +408,7 @@
       9.291082529158654
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.8,
     "source": "E:THR1:N",
     "direction": [
       -0.3530752510658704,
@@ -365,7 +419,10 @@
       17.73,
       28.77,
       10.881
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 2,
+    "frequency": 0.2
   },
   {
     "position": [
@@ -374,7 +431,7 @@
       10.420919807108826
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "E:THR1:O",
     "direction": [
       -0.6978137394695249,
@@ -385,7 +442,10 @@
       16.496,
       26.477,
       9.451
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -394,7 +454,7 @@
       10.511480005905208
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.65,
     "source": "E:THR1:OG1",
     "direction": [
       0.7493949390040349,
@@ -405,7 +465,10 @@
       19.866,
       27.041,
       11.767
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 1,
+    "frequency": 0.1
   },
   {
     "position": [
@@ -414,7 +477,7 @@
       13.80131284510204
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.65,
     "source": "E:THR1:OG1",
     "direction": [
       0.6363292871076983,
@@ -425,7 +488,10 @@
       19.866,
       27.041,
       11.767
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 1,
+    "frequency": 0.1
   },
   {
     "position": [
@@ -434,7 +500,7 @@
       7.102379951875275
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "F:ALA1:N",
     "direction": [
       0.7570890906470454,
@@ -445,7 +511,10 @@
       15.638,
       23.414,
       8.914
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -454,7 +523,7 @@
       10.253987771296968
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "F:ALA1:O",
     "direction": [
       -0.5582212273997544,
@@ -465,7 +534,10 @@
       13.95,
       24.075,
       10.82
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -474,14 +546,17 @@
       14.58962434164596
     ],
     "ptype": "hydrophobic",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "F:ALA1:CB",
     "direction": null,
     "apex": [
       17.118,
       23.146,
       10.849
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -490,7 +565,7 @@
       12.421923396732003
     ],
     "ptype": "acceptor",
-    "weight": 2.0,
+    "weight": 0.5,
     "source": "F:TYR2:N, G:ARG7:NE",
     "direction": [
       -0.46158949269850424,
@@ -501,7 +576,10 @@
       14.401,
       22.251,
       12.086
-    ]
+    ],
+    "weight_level0": 2.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -510,7 +588,7 @@
       15.144340674408953
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.8,
     "source": "F:TYR2:O",
     "direction": [
       0.9533016541733847,
@@ -521,7 +599,10 @@
       14.955,
       22.209,
       14.601
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 2,
+    "frequency": 0.2
   },
   {
     "position": [
@@ -530,7 +611,7 @@
       5.862607606021503
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "F:TYR2:OH",
     "direction": [
       0.39496275044370277,
@@ -541,7 +622,10 @@
       10.173,
       20.362,
       7.72
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -550,7 +634,7 @@
       5.0811440347781796
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "F:TYR2:OH",
     "direction": [
       -0.39881416931288816,
@@ -561,7 +645,10 @@
       10.173,
       20.362,
       7.72
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -570,7 +657,7 @@
       14.540070118671686
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.8,
     "source": "F:CYS3:N",
     "direction": [
       -0.9246554232089434,
@@ -581,7 +668,10 @@
       12.929,
       22.841,
       15.318
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 2,
+    "frequency": 0.2
   },
   {
     "position": [
@@ -590,7 +680,7 @@
       16.40305678178798
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "F:CYS3:O",
     "direction": [
       -0.9570392373519219,
@@ -601,7 +691,10 @@
       11.059,
       22.274,
       17.105
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -610,7 +703,7 @@
       13.792884774849725
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "F:CYS3:SG",
     "direction": [
       -0.23230239427863225,
@@ -621,7 +714,10 @@
       14.633,
       25.296,
       16.575
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -630,7 +726,7 @@
       18.669170415202288
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "F:LEU4:N",
     "direction": [
       0.9872045340044887,
@@ -641,7 +737,10 @@
       12.581,
       21.238,
       18.301
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -650,7 +749,7 @@
       22.48943625882428
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "F:LEU4:O",
     "direction": [
       0.8735679762838144,
@@ -661,7 +760,10 @@
       12.857,
       21.158,
       21.078
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -670,14 +772,17 @@
       18.430366823781263
     ],
     "ptype": "hydrophobic",
-    "weight": 2.0,
+    "weight": 0.5,
     "source": "F:LEU4:CB, F:LEU4:CG, G:ILE6:CB, G:ILE6:CG1",
     "direction": null,
     "apex": [
       12.3,
       18.966,
       19.267
-    ]
+    ],
+    "weight_level0": 2.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -686,14 +791,17 @@
       19.136697427708782
     ],
     "ptype": "hydrophobic",
-    "weight": 2.0,
+    "weight": 0.5,
     "source": "F:LEU4:CD1, F:LEU4:CD2",
     "direction": null,
     "apex": [
       10.146,
       17.851,
       20.087
-    ]
+    ],
+    "weight_level0": 2.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -702,7 +810,7 @@
       19.363051684695506
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "F:SER5:N",
     "direction": [
       -0.8404237194253831,
@@ -713,7 +821,10 @@
       10.732,
       21.783,
       20.925
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -722,7 +833,7 @@
       22.576046295020493
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "F:SER5:O",
     "direction": [
       -0.9250469311546954,
@@ -733,7 +844,10 @@
       8.824,
       21.247,
       23.028
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -742,7 +856,7 @@
       19.151230948942466
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "F:SER5:OG",
     "direction": [
       0.5714813172810604,
@@ -753,7 +867,10 @@
       10.844,
       24.634,
       21.001
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -762,7 +879,7 @@
       24.887473394661992
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "F:VAL6:N",
     "direction": [
       0.8449818952809731,
@@ -773,7 +890,10 @@
       10.68,
       21.515,
       24.375
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -782,7 +902,7 @@
       27.953372695793522
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "F:VAL6:O",
     "direction": [
       0.7553076814761587,
@@ -793,7 +913,10 @@
       11.086,
       21.893,
       27.117
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -802,14 +925,17 @@
       22.031671262849887
     ],
     "ptype": "hydrophobic",
-    "weight": 2.0,
+    "weight": 0.5,
     "source": "F:VAL6:CB, F:VAL6:CG2, F:VAL6:CG1",
     "direction": null,
     "apex": [
       11.051,
       19.287,
       25.425
-    ]
+    ],
+    "weight_level0": 2.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -818,7 +944,7 @@
       29.79955295593294
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "G:VAL1:N",
     "direction": [
       0.5130277257612588,
@@ -829,7 +955,10 @@
       12.117,
       25.352,
       29.828
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -838,7 +967,7 @@
       28.459612359592416
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "G:VAL1:O",
     "direction": [
       0.7633617300185549,
@@ -849,7 +978,10 @@
       14.351,
       25.321,
       27.996
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -858,14 +990,17 @@
       24.103118245335143
     ],
     "ptype": "hydrophobic",
-    "weight": 2.0,
+    "weight": 0.5,
     "source": "G:VAL1:CB, G:VAL1:CG1, G:VAL1:CG2",
     "direction": null,
     "apex": [
       11.229,
       25.847,
       27.584
-    ]
+    ],
+    "weight_level0": 2.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -874,7 +1009,7 @@
       26.687115611573983
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "G:LYS2:N",
     "direction": [
       -0.807707467630617,
@@ -885,7 +1020,10 @@
       13.5,
       23.449,
       27.023
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -894,7 +1032,7 @@
       23.747055589015414
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "G:LYS2:O",
     "direction": [
       -0.9261269681403912,
@@ -905,7 +1043,10 @@
       13.271,
       22.701,
       24.536
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -914,7 +1055,7 @@
       32.279375966690445
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "G:LYS2:NZ",
     "direction": [
       0.35990667776313856,
@@ -925,7 +1066,10 @@
       18.909,
       23.912,
       29.589
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -934,7 +1078,7 @@
       25.083783290936744
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "G:HIS3:N",
     "direction": [
       0.8568947445146887,
@@ -945,7 +1089,10 @@
       15.306,
       23.495,
       24.015
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -954,7 +1101,7 @@
       22.77963068017453
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 2.0,
     "source": "G:HIS3:O",
     "direction": [
       0.9575039632408208,
@@ -965,7 +1112,10 @@
       17.375,
       22.905,
       22.187
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 10,
+    "frequency": 1.0
   },
   {
     "position": [
@@ -974,7 +1124,7 @@
       20.701319518461737
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "G:HIS3:ND1",
     "direction": [
       0.4582110653570479,
@@ -985,7 +1135,10 @@
       12.947,
       26.015,
       22.353
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -994,7 +1147,7 @@
       25.645993957889893
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "G:HIS3:NE2",
     "direction": [
       0.6881506033814642,
@@ -1005,7 +1158,10 @@
       13.254,
       27.454,
       23.902
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -1014,7 +1170,7 @@
       20.763359375378805
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 2.0,
     "source": "G:TYR4:N",
     "direction": [
       -0.9830471555154873,
@@ -1025,7 +1181,10 @@
       15.826,
       21.659,
       21.158
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 10,
+    "frequency": 1.0
   },
   {
     "position": [
@@ -1034,7 +1193,7 @@
       17.049880669109303
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "G:TYR4:O",
     "direction": [
       -0.8881657980187025,
@@ -1045,7 +1204,10 @@
       15.513,
       20.989,
       18.381
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -1054,7 +1216,7 @@
       27.75277682819
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "G:TYR4:OH",
     "direction": [
       0.8602719633831026,
@@ -1065,7 +1227,10 @@
       16.424,
       18.449,
       26.363
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -1074,7 +1239,7 @@
       29.24992609715675
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "G:TYR4:OH",
     "direction": [
       0.0073305725893966145,
@@ -1085,7 +1250,10 @@
       16.424,
       18.449,
       26.363
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -1094,7 +1262,7 @@
       19.59274063487725
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "G:LYS5:N",
     "direction": [
       0.8879266877304945,
@@ -1105,7 +1273,10 @@
       17.727,
       21.128,
       18.264
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -1114,7 +1285,7 @@
       17.281191038617596
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "G:LYS5:O",
     "direction": [
       0.5569383584691405,
@@ -1125,7 +1296,10 @@
       18.111,
       19.109,
       16.465
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -1134,7 +1308,7 @@
       17.454096646194735
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.65,
     "source": "G:LYS5:NZ",
     "direction": [
       -0.02844189942144865,
@@ -1145,7 +1319,10 @@
       18.615,
       25.604,
       14.809
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 1,
+    "frequency": 0.1
   },
   {
     "position": [
@@ -1154,7 +1331,7 @@
       14.578078746609103
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "G:ILE6:N",
     "direction": [
       -0.570090452321879,
@@ -1165,7 +1342,10 @@
       16.544,
       19.917,
       15.194
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -1174,7 +1354,7 @@
       10.944395617222002
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "G:ILE6:O",
     "direction": [
       -0.2954172458951198,
@@ -1185,7 +1365,10 @@
       16.515,
       20.066,
       12.414
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -1194,14 +1377,17 @@
       16.541986964519207
     ],
     "ptype": "hydrophobic",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "G:ILE6:CG2",
     "direction": null,
     "apex": [
       14.568,
       17.274,
       13.281
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -1210,14 +1396,17 @@
       18.417840901036225
     ],
     "ptype": "hydrophobic",
-    "weight": 2.0,
+    "weight": 0.5,
     "source": "G:ILE6:CD1, H:ILE2:CG1, H:ILE2:CD1",
     "direction": null,
     "apex": [
       12.686,
       17.674,
       15.551
-    ]
+    ],
+    "weight_level0": 2.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -1226,7 +1415,7 @@
       14.372080480831688
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "G:ARG7:N",
     "direction": [
       0.27647230922820654,
@@ -1237,7 +1426,10 @@
       17.828,
       18.167,
       12.63
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -1246,7 +1438,7 @@
       11.410145975975643
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "G:ARG7:O",
     "direction": [
       -0.43749064203401367,
@@ -1257,7 +1449,10 @@
       17.235,
       16.357,
       10.623
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -1266,7 +1461,7 @@
       13.00976958833423
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "G:ARG7:NH2",
     "direction": [
       0.5179576521554027,
@@ -1277,7 +1472,10 @@
       21.576,
       21.429,
       11.007
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -1286,7 +1484,7 @@
       7.8647831818249845
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "G:ARG7:NH1",
     "direction": [
       0.478636292331087,
@@ -1297,7 +1495,10 @@
       19.547,
       21.954,
       10.022
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -1306,7 +1507,7 @@
       12.863834457956873
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "H:TYR1:N",
     "direction": [
       -0.862762927330454,
@@ -1317,7 +1518,10 @@
       17.244,
       13.887,
       12.335
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -1326,7 +1530,7 @@
       12.863976428941129
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "H:TYR1:O",
     "direction": [
       -0.005645769006935287,
@@ -1337,7 +1541,10 @@
       18.179,
       15.89,
       13.982
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -1346,7 +1553,7 @@
       7.588525589699101
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "H:TYR1:OH",
     "direction": [
       0.03736183085396712,
@@ -1357,7 +1564,10 @@
       22.918,
       15.968,
       10.483
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -1366,7 +1576,7 @@
       9.012097152777926
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "H:TYR1:OH",
     "direction": [
       0.6204818995492148,
@@ -1377,7 +1587,10 @@
       22.918,
       15.968,
       10.483
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -1386,7 +1599,7 @@
       17.033477249377185
     ],
     "ptype": "acceptor",
-    "weight": 2.0,
+    "weight": 0.5,
     "source": "H:ILE2:N, H:THR3:N",
     "direction": [
       -0.48701344971710964,
@@ -1397,7 +1610,10 @@
       18.359,
       14.45,
       15.755
-    ]
+    ],
+    "weight_level0": 2.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -1406,7 +1622,7 @@
       16.517693486952037
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "H:ILE2:O",
     "direction": [
       0.6735808329972256,
@@ -1417,7 +1633,10 @@
       21.149,
       15.919,
       16.738
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -1426,14 +1645,17 @@
       18.65558228403882
     ],
     "ptype": "hydrophobic",
-    "weight": 2.0,
+    "weight": 0.65,
     "source": "H:ILE2:CB, H:ILE2:CG2",
     "direction": null,
     "apex": [
       18.161,
       15.308,
       18.109
-    ]
+    ],
+    "weight_level0": 2.0,
+    "support_count": 1,
+    "frequency": 0.1
   },
   {
     "position": [
@@ -1442,7 +1664,7 @@
       14.629896856109307
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "H:THR3:O",
     "direction": [
       -0.6845988614413931,
@@ -1453,7 +1675,10 @@
       21.422,
       11.685,
       15.386
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -1462,7 +1687,7 @@
       15.694586412110219
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "H:THR3:OG1",
     "direction": [
       0.04022964437814291,
@@ -1473,7 +1698,10 @@
       23.943,
       12.216,
       17.995
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -1482,7 +1710,7 @@
       17.5746482857667
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "H:THR3:OG1",
     "direction": [
       0.9438850389876804,
@@ -1493,7 +1721,10 @@
       23.943,
       12.216,
       17.995
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -1502,7 +1733,7 @@
       27.247252385118408
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "I:GLY1:N",
     "direction": [
       -0.6315191556909932,
@@ -1513,7 +1744,10 @@
       19.223,
       11.609,
       25.231
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -1522,7 +1756,7 @@
       27.229536285020604
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "I:GLY1:O",
     "direction": [
       0.3542619148947755,
@@ -1533,7 +1767,10 @@
       19.317,
       15.118,
       26.352
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -1542,7 +1779,7 @@
       25.058854339376904
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "I:LEU2:N",
     "direction": [
       -0.3056048609680363,
@@ -1553,7 +1790,10 @@
       17.601,
       13.815,
       25.845
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -1562,7 +1802,7 @@
       30.39284169288589
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "I:LEU2:O",
     "direction": [
       0.15341490937188518,
@@ -1573,7 +1813,10 @@
       16.515,
       14.252,
       28.411
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -1582,14 +1825,17 @@
       22.027785248335654
     ],
     "ptype": "hydrophobic",
-    "weight": 2.0,
+    "weight": 1.25,
     "source": "I:LEU2:CB, I:LEU2:CG",
     "direction": null,
     "apex": [
       15.252,
       14.459,
       25.447
-    ]
+    ],
+    "weight_level0": 2.0,
+    "support_count": 5,
+    "frequency": 0.5
   },
   {
     "position": [
@@ -1598,14 +1844,17 @@
       21.22092700309673
     ],
     "ptype": "hydrophobic",
-    "weight": 1.0,
+    "weight": 1.7000000000000002,
     "source": "I:LEU2:CD2",
     "direction": null,
     "apex": [
       13.703,
       13.988,
       23.407
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 8,
+    "frequency": 0.8
   },
   {
     "position": [
@@ -1614,14 +1863,17 @@
       20.710551158834154
     ],
     "ptype": "hydrophobic",
-    "weight": 1.0,
+    "weight": 1.85,
     "source": "I:LEU2:CD1",
     "direction": null,
     "apex": [
       15.754,
       15.335,
       23.139
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 9,
+    "frequency": 0.9
   },
   {
     "position": [
@@ -1630,7 +1882,7 @@
       25.84456471162141
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "I:CYS3:N",
     "direction": [
       -0.2071534698975063,
@@ -1641,7 +1893,10 @@
       15.765,
       16.282,
       27.903
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -1650,7 +1905,7 @@
       33.910607335032736
     ],
     "ptype": "donor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "I:CYS3:O",
     "direction": [
       -0.042087649821115805,
@@ -1661,7 +1916,10 @@
       14.32,
       15.385,
       31.055
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   },
   {
     "position": [
@@ -1670,7 +1928,7 @@
       29.248989027897398
     ],
     "ptype": "acceptor",
-    "weight": 1.0,
+    "weight": 0.5,
     "source": "I:CYS3:SG",
     "direction": [
       -0.7868651124650056,
@@ -1681,6 +1939,9 @@
       13.584,
       18.469,
       28.413
-    ]
+    ],
+    "weight_level0": 1.0,
+    "support_count": 0,
+    "frequency": 0.0
   }
 ]
