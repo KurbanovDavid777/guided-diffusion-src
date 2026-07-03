@@ -128,7 +128,7 @@ class PharmacophoreField(nn.Module):
         # axis self.D[m] points from pocket heavy atom outward to the target point;
         # the ligand atom should sit on that axis -> vector (x_i - p_m) aligned with D_m.
         diff_hp = x[:, None, :] - self.P[None, :, :]          # (N, M, 3): from hotspot to atom
-        diff_norm = diff_hp.norm(dim=-1, keepdim=True).clamp_min(1e-6)
+        diff_norm = torch.sqrt((diff_hp ** 2).sum(-1, keepdim=True) + 1e-6)  # softened norm, grad-safe at d=0
         u = diff_hp / diff_norm                                # (N, M, 3) unit
         D_norm = self.D.norm(dim=-1, keepdim=True)             # (M, 1)
         has_axis = (D_norm.squeeze(-1) > 1e-6).float()         # (M,) 1 if directional, 0 if sphere
@@ -138,7 +138,9 @@ class PharmacophoreField(nn.Module):
         # for sphere hotspots (no axis) angular=1 (disabled) via has_axis mask.
         angular = torch.exp(self.kappa * (cos_theta - 1.0))    # (N, M)
         angular = angular * has_axis[None, :] + (1.0 - has_axis[None, :])  # sphere -> 1
-
+        # gate angular -> 1 at small d (angle is meaningless when atom sits on the point)
+        d_gate = torch.sigmoid((d2 - 0.25) / 0.1)              # ~0 for d<0.5A, ~1 for d>0.5A
+        angular = angular * d_gate + (1.0 - d_gate)           # near d=0 -> angular=1
         raw = c_match * torch.exp(-self.beta * d2) * angular   # (N, M), now direction-aware
 
         # Softmax normalization over atoms for each hotspot (N, M)

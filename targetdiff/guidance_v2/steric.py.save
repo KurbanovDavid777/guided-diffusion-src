@@ -35,7 +35,8 @@ def steric_penalty(
     d2 = (diff ** 2).sum(-1)                        # (N, N), gradient-safe at d=0
     N = x.size(0)
     iu = torch.triu_indices(N, N, offset=1, device=x.device)   # device-safe
-    d = torch.sqrt(d2[iu[0], iu[1]] + 1e-6)                    # (P,) softened dist; eps INSIDE sqrt for grad safety at d=0
+
+    d = torch.sqrt(d2[iu[0], iu[1]].clamp_min(1e-8))           # (P,) pairwise dist; clamp for grad safety
     # Buckingham (Born-Mayer) repulsion: A * exp(-d / rho)
     # exp form = Pauli repulsion from electron-shell overlap; finite at d=0 (no singularity)
     penalty = (A * torch.exp(-d / rho)).sum()

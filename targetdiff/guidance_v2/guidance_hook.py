@@ -24,10 +24,11 @@ def atomic_numbers_to_symbols(atomic_nums: List[int]) -> List[str]:
 
 
 def beta_scale_from_sigma(sigma_t: float, sigma_max: float,
-                          scale_min: float = 0.04, scale_max: float = 1.0) -> float:
+                          scale_min: float = 0.01, scale_max: float = 1.0) -> float:
     """Beta-annealing schedule. High sigma_t (early, noisy) -> small scale (wide Gaussian,
-    long-range guidance). Low sigma_t (late) -> scale_max (sharp, precise placement).
-    scale_min=0.04 makes beta ~25x wider early (capture radius ~2.5 A instead of 0.45 A)."""
+    long-range guidance, reaches ~6 A). Low sigma_t (late) -> scale_max=1.0 (sharp beta,
+    precise placement, force peak at 0.5-1.5 A). scale_min=0.01 reaches 6 A early;
+    full sweep 0.01 -> 1.0 covers both ends of the radius problem."""
     frac = max(0.0, min(1.0, sigma_t / sigma_max))          # in [0,1]
     return scale_max - (scale_max - scale_min) * frac        # sigma big -> scale small
 
@@ -47,7 +48,7 @@ def compute_guidance_force(
     with torch.enable_grad():
         pos = pos.detach().requires_grad_(True)
 
-        # beta-annealing: widen the activity Gaussian on noisy early steps
+        # beta-annealing: wide Gaussian early (long-range ~6 A), sharp late (precise placement)
         field.set_beta_scale(beta_scale_from_sigma(sigma_t, sigma_max))
 
         # real typing (not a proxy) — differentiable in pos
@@ -56,6 +57,12 @@ def compute_guidance_force(
         g_act = activity_gradient(field, pos, c)               # (N,3) attraction
         g_ster = steric_gradient(pos)                          # (N,3) repulsion (Buckingham)
 
-    w_t = float(sigma_t) ** 2                              # w(t) ~ sigma_t^2
+    # w(t) rising toward the end (Variant B): SAFETY VALVE, not cosmetics.
+    # Early (sigma_t high): small w -> suppress the wide-radius force where typing is
+    #   unreliable (CN on noisy coords lies). Late (sigma_t low): large w -> full force
+    #   where types are trustworthy and the well is sharp. frac = sigma_t/sigma_max in [0,1].
+    frac = max(0.0, min(1.0, float(sigma_t) / float(sigma_max)))
+    w_t = 1.0 - frac                                       # sigma high (early) -> w~0; sigma low (late) -> w~1
     force = w_t * (lambda_act * g_act - lambda_ster * g_ster)
+
     return force.detach()

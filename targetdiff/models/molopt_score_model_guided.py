@@ -720,8 +720,6 @@ class ScorePosNet3D(nn.Module):
                     lambda_act=gv2_l_act, lambda_ster=gv2_l_ster,
                 )
                 ligand_pos = ligand_pos + gv2_scale * force.to(ligand_pos.device)
-            # ── End Guidance v2 ──
-
 
             if not pos_only:
                 log_ligand_v_recon = F.log_softmax(v0_from_e, dim=-1)

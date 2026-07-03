@@ -122,8 +122,8 @@ def main():
 
     parser.add_argument('--gv2_lambda_ster', type=float, default=1.0)
 
-    parser.add_argument('--gv2_scale', type=float, default=0.1,
-                        help='Overall guidance-v2 gain applied to the force')
+    parser.add_argument('--gv2_scale', type=float, default=15.0,
+                        help='Overall guidance-v2 gain (calibrated: ratio~0.16 vs diffusion prior)')
 
     parser.add_argument('--encoder_path',  type=str,
                         default='encoder/mol_encoder.pt')
