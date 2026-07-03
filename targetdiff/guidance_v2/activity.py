@@ -132,7 +132,7 @@ class PharmacophoreField(nn.Module):
         u = diff_hp / diff_norm                                # (N, M, 3) unit
         D_norm = self.D.norm(dim=-1, keepdim=True)             # (M, 1)
         has_axis = (D_norm.squeeze(-1) > 1e-6).float()         # (M,) 1 if directional, 0 if sphere
-        D_unit = -self.D / D_norm.clamp_min(1e-6)               # (M, 3)
+        D_unit = self.D / D_norm.clamp_min(1e-6)                # (M, 3) axis points +D into pocket (ligand approach side) 
         cos_theta = (u * D_unit[None, :, :]).sum(-1)           # (N, M), angle atom-axis
         # angular(θ) = exp(κ(cosθ − 1)); =1 when aligned, decays off-axis.
         # for sphere hotspots (no axis) angular=1 (disabled) via has_axis mask.
@@ -302,8 +302,15 @@ if __name__ == "__main__":
         s_minus = field(on_minus, c1).item()
         s_off   = field(off_axis, c1).item()
         print(f"  angular: +axis S={s_plus:.4f}  -axis S={s_minus:.4f}  off S={s_off:.4f}")
-        s_on = max(s_plus, s_minus)
-        assert s_on > s_off, "angular term must favor on-axis approach"
+
+        # STRICT: must distinguish the TWO sides of the axis, not just axis-vs-perpendicular.
+        # Geometry: position = apex + 2.9*D, so +D points INTO the pocket (away from protein),
+        # -D points back toward the protein atom. Ligand approaches FROM the pocket side (+D).
+        # Correct cone must reward +axis (pocket side) and penalize -axis (through-protein).
+        print(f"  sides: +axis={s_plus:.4f}  perp={s_off:.4f}  -axis={s_minus:.4f}")
+        assert s_plus > s_off, "+axis (pocket side) must beat perpendicular"
+        assert s_off > s_minus, "perpendicular must beat -axis (through-protein side)"
+        # i.e. strict ordering  +axis > perp > -axis  confirms axis points into pocket
 
 
     print("All tests passed.")

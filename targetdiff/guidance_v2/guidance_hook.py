@@ -23,8 +23,12 @@ def atomic_numbers_to_symbols(atomic_nums: List[int]) -> List[str]:
     return [_Z_TO_SYMBOL.get(int(z), "C") for z in atomic_nums]
 
 
+def _frac(sigma_t: float, sigma_max: float) -> float:
+    """Normalized diffusion progress: 1.0 early (high sigma), 0.0 late (low sigma)."""
+    return max(0.0, min(1.0, float(sigma_t) / float(sigma_max)))
+
 def beta_scale_from_sigma(sigma_t: float, sigma_max: float,
-                          scale_min: float = 0.01, scale_max: float = 1.0) -> float:
+                          scale_min: float = 0.01, scale_max: float = 0.15) -> float:
     """Beta-annealing schedule. High sigma_t (early, noisy) -> small scale (wide Gaussian,
     long-range guidance, reaches ~6 A). Low sigma_t (late) -> scale_max=1.0 (sharp beta,
     precise placement, force peak at 0.5-1.5 A). scale_min=0.01 reaches 6 A early;
@@ -61,8 +65,13 @@ def compute_guidance_force(
     # Early (sigma_t high): small w -> suppress the wide-radius force where typing is
     #   unreliable (CN on noisy coords lies). Late (sigma_t low): large w -> full force
     #   where types are trustworthy and the well is sharp. frac = sigma_t/sigma_max in [0,1].
-    frac = max(0.0, min(1.0, float(sigma_t) / float(sigma_max)))
-    w_t = 1.0 - frac                                       # sigma high (early) -> w~0; sigma low (late) -> w~1
-    force = w_t * (lambda_act * g_act - lambda_ster * g_ster)
+
+    # w gates ONLY activity (type-dependent), NOT steric (type-independent guard-rail,
+    # needed at all steps to prevent collapse on noisy coords).
+    # w has a FLOOR (0.3 early, not 0): long-range polar attraction (O reliably acceptor
+    # regardless of CN noise) stays alive early; full weight late where the well is sharp.
+    frac = _frac(sigma_t, sigma_max)
+    w_act = 0.3 + 0.7 * (1.0 - frac)                       # early 0.3, late 1.0 (floor, not zero)
+    force = w_act * lambda_act * g_act - lambda_ster * g_ster
 
     return force.detach()
