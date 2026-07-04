@@ -71,7 +71,7 @@ def compute_guidance_force(
     # w has a FLOOR (0.3 early, not 0): long-range polar attraction (O reliably acceptor
     # regardless of CN noise) stays alive early; full weight late where the well is sharp.
     frac = _frac(sigma_t, sigma_max)
-    w_act = 0.3 + 0.7 * (1.0 - frac)                       # early 0.3, late 1.0 (floor, not zero)
+    w_act = (1.0 - frac) ** 2                              # w=0 early (molecule assembles under prior), full late
     force = w_act * lambda_act * g_act - lambda_ster * g_ster
 
     return force.detach()

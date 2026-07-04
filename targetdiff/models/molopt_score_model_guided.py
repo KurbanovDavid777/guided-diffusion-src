@@ -702,16 +702,11 @@ class ScorePosNet3D(nn.Module):
             else:
                 raise ValueError
 
-            pos_model_mean = self.q_pos_posterior(x0=pos0_from_e, xt=ligand_pos, t=t, batch=batch_ligand)
-            pos_log_variance = extract(self.posterior_logvar, t, batch_ligand)
-            # no noise when t == 0
-            nonzero_mask = (1 - (t == 0).float())[batch_ligand].unsqueeze(-1)
-            ligand_pos_next = pos_model_mean + nonzero_mask * (0.5 * pos_log_variance).exp() * torch.randn_like(
-                ligand_pos)
-            ligand_pos = ligand_pos_next
-
-
-            # ── Guidance v2: activity + steric with beta-annealing ──
+            # ── Guidance v2: apply to x0_pred BEFORE posterior, so prior smooths it ──
+            # Canonical classifier guidance: shift the x0-prediction, then let q_pos_posterior
+            # mix it with xt. The bond-stretching component gets damped by the prior ON THE
+            # SAME STEP (posterior pulls back toward xt-consistent geometry), so displacements
+            # don't accumulate into bond breakage over the trajectory.
             if gv2_field is not None and pos0_from_e is not None:
                 sigma_t = float(extract(self.sqrt_one_minus_alphas_cumprod, t, batch_ligand)[0].item())
                 force = compute_guidance_force(
@@ -719,7 +714,22 @@ class ScorePosNet3D(nn.Module):
                     sigma_t=sigma_t, sigma_max=gv2_sigma_max,
                     lambda_act=gv2_l_act, lambda_ster=gv2_l_ster,
                 )
-                ligand_pos = ligand_pos + gv2_scale * force.to(ligand_pos.device)
+                step = gv2_scale * force.to(pos0_from_e.device)
+                # clamp per-atom displacement (optional; posterior also limits the jump now)
+                max_disp = getattr(self, 'gv2_max_disp', 0.1)   # A per step
+                step_norm = step.norm(dim=-1, keepdim=True)     # (N,1)
+                scale_factor = (max_disp / step_norm.clamp_min(1e-8)).clamp(max=1.0)
+                pos0_from_e = pos0_from_e + step * scale_factor   # shift x0, NOT the output
+
+            pos_model_mean = self.q_pos_posterior(x0=pos0_from_e, xt=ligand_pos, t=t, batch=batch_ligand)
+            pos_log_variance = extract(self.posterior_logvar, t, batch_ligand)
+            # no noise when t == 0
+            nonzero_mask = (1 - (t == 0).float())[batch_ligand].unsqueeze(-1)
+            ligand_pos_next = pos_model_mean + nonzero_mask * (0.5 * pos_log_variance).exp() * torch.randn_like(
+                ligand_pos)
+            ligand_pos = ligand_pos_next
+            # NO guidance added after this line — it's already baked into x0 above
+
 
             if not pos_only:
                 log_ligand_v_recon = F.log_softmax(v0_from_e, dim=-1)
